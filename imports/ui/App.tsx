@@ -1,11 +1,9 @@
 import React from 'react';
-import { Hello } from './Hello';
-import { Info } from './Info';
+import { ChoreList } from './ChoreList';
 
 export const App = () => (
   <div>
-    <h1>Welcome to Meteor!</h1>
-    <Hello />
-    <Info />
+    <h1>Last Done</h1>
+    <ChoreList />
   </div>
 );

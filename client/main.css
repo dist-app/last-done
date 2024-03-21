@@ -2,3 +2,23 @@ body {
   padding: 10px;
   font-family: sans-serif;
 }
+
+.recently-done {
+  color: #888;
+}
+.recently-done .title-cell {
+  text-decoration: line-through;
+}
+
+button {
+  height: 2.5em;
+  font-size: 1.2em;
+}
+
+.chore-grid {
+  width: 100%;
+  max-width: 30em;
+}
+.chore-grid .title-cell {
+  font-size: 1.4em;
+}
