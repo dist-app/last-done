@@ -7,7 +7,7 @@ body {
 .wrap {
   max-width: 30em;
   margin: 0 auto;
-  padding: 0.5em 1em 5em;
+  padding: 1em 1em 5em;
   background-color: #ddd;
 }
 
@@ -25,10 +25,23 @@ button {
 
 .chore-grid {
   width: 100%;
+  border-collapse: collapse;
 }
-.chore-grid .title-cell {
+.title-cell {
   font-size: 1.4em;
 }
+.title-cell a {
+  color: inherit;
+  display: block;
+}
+.title-cell a:not(:hover):not(:focus) {
+  text-decoration: none;
+}
 tr:hover td {
-  background-color: rgba()
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+h1, h2, h3, h4 {
+  font-weight: normal;
+  margin: 0;
 }

@@ -49,8 +49,33 @@ Meteor.methods({
       userId: chore.userId,
       goalIntervalDays: chore.intervalDays,
       prevActionDays: chore.lastAction
-        ? ((chore.lastAction.valueOf() - nowDate.valueOf()) / 1000 / 60 / 60 / 24)
+        ? ((nowDate.valueOf() - chore.lastAction.valueOf()) / 1000 / 60 / 60 / 24)
         : undefined,
     });
   },
 })
+
+export function lastDoneStr(chore: Chore) {
+  if (!chore.lastAction) {
+    return 'Never';
+  }
+
+  const hoursAgo = (Date.now() - chore.lastAction.valueOf()) / 1000 / 60 / 60;
+  if (hoursAgo < 1) return `Now`;
+  if (hoursAgo < 24) return `${Math.round(hoursAgo)}h ago`;
+  return `${Math.round(hoursAgo / 24)}d ago`;
+}
+
+export function nextDueStr(chore: Chore) {
+  if (!chore.lastAction) {
+    return 'N/A';
+  }
+
+  const nextDue = new Date(chore.lastAction);
+  nextDue.setDate(nextDue.getDate() + chore.intervalDays);
+
+  const hoursFromNow = (nextDue.valueOf() - Date.now()) / 1000 / 60 / 60;
+  if (hoursFromNow < 0) return `Past Due`;
+  if (hoursFromNow < 24) return `In ${Math.round(hoursFromNow)}h`;
+  return `In ${Math.round(hoursFromNow / 24)}d`;
+}

@@ -1,32 +1,9 @@
 import React, { Fragment } from "react";
+import { Link } from "react-router-dom";
 import { useFind, useSubscribe } from "meteor/react-meteor-data";
-import { Chore, ChoresCollection } from "../api/chores";
 import { Meteor } from "meteor/meteor";
 
-function lastDoneStr(chore: Chore) {
-  if (!chore.lastAction) {
-    return 'Never';
-  }
-
-  const hoursAgo = (Date.now() - chore.lastAction.valueOf()) / 1000 / 60 / 60;
-  if (hoursAgo < 1) return `Now`;
-  if (hoursAgo < 24) return `${Math.round(hoursAgo)}h ago`;
-  return `${Math.round(hoursAgo / 24)}d ago`;
-}
-
-function nextDueStr(chore: Chore) {
-  if (!chore.lastAction) {
-    return 'N/A';
-  }
-
-  const nextDue = new Date(chore.lastAction);
-  nextDue.setDate(nextDue.getDate() + chore.intervalDays);
-
-  const hoursFromNow = (nextDue.valueOf() - Date.now()) / 1000 / 60 / 60;
-  if (hoursFromNow < 0) return `Past Due`;
-  if (hoursFromNow < 24) return `In ${Math.round(hoursFromNow)}h`;
-  return `In ${Math.round(hoursFromNow / 24)}d`;
-}
+import { Chore, ChoresCollection, lastDoneStr, nextDueStr } from "/imports/api/chores";
 
 export const ChoreGrid = () => {
   const isLoading = useSubscribe("chores/all");
@@ -74,7 +51,9 @@ export const ChoreGrid = () => {
                 (chore.lastAction && chore.lastAction > lastActionCutoff) ? 'recently-done' : '',
               ].map(x => x).join(' ')}>
                 <td className="title-cell">
-                  {chore.title}
+                  <Link to={`/chores/by-id/${chore._id}`}>
+                    {chore.title}
+                  </Link>
                 </td>
                 <td>
                   {chore.intervalDays}d
