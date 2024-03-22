@@ -1,9 +1,9 @@
 import React from 'react';
-import { ChoreList } from './ChoreList';
+import { ChoreGrid } from './ChoreGrid';
 
 export const App = () => (
-  <div>
-    <h1>Last Done</h1>
-    <ChoreList />
+  <div className="wrap">
+    <h2>All Chores</h2>
+    <ChoreGrid />
   </div>
 );

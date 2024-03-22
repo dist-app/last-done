@@ -9,6 +9,7 @@ export interface Chore {
 
   group: string;
   title: string;
+  description?: string;
   intervalDays: number;
   createdAt: Date;
   lastAction?: Date;
@@ -30,16 +31,26 @@ Meteor.methods({
       throw new Meteor.Error(400, 'too soon since last action');
     }
 
+    const nowDate = new Date;
+
+    const n = await ChoresCollection.updateAsync({
+      _id: choreId,
+      lastAction: chore.lastAction,
+    }, {
+      $set: {
+        lastAction: nowDate,
+      },
+    });
+    if (!n) throw new Meteor.Error('race', `Database race occurred`);
+
     await ChoreActionsCollection.insertAsync({
       choreId: choreId,
-      createdAt: new Date,
+      createdAt: nowDate,
       userId: chore.userId,
-    });
-
-    await ChoresCollection.updateAsync({_id: choreId}, {
-      $set: {
-        lastAction: new Date,
-      },
+      goalIntervalDays: chore.intervalDays,
+      prevActionDays: chore.lastAction
+        ? ((chore.lastAction.valueOf() - nowDate.valueOf()) / 1000 / 60 / 60 / 24)
+        : undefined,
     });
   },
 })

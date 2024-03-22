@@ -7,6 +7,9 @@ export interface ChoreAction {
 
   createdAt: Date;
   // notes?: string;
+
+  prevActionDays?: number;
+  goalIntervalDays?: number;
 }
 
 export const ChoreActionsCollection = new Mongo.Collection<ChoreAction>('ChoreActions');
