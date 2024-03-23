@@ -79,3 +79,22 @@ export function nextDueStr(chore: Chore) {
   if (hoursFromNow < 24) return `In ${Math.round(hoursFromNow)}h`;
   return `In ${Math.round(hoursFromNow / 24)}d`;
 }
+
+export function isDueSoon(chore: Chore) {
+  if (!chore.lastAction) return false;
+
+  const nextDue = new Date(chore.lastAction);
+  nextDue.setDate(nextDue.getDate() + chore.intervalDays);
+
+  const daysFromNow = (nextDue.valueOf() - Date.now()) / 1000 / 60 / 60 / 24;
+  if (daysFromNow <= 0) return true;
+
+  if (chore.intervalDays >= 7) {
+    // console.log({daysFromNow, name: chore.title, days: chore.intervalDays})
+    return daysFromNow < 2;
+  } else {
+    const fractionToDue = 1 - (daysFromNow / chore.intervalDays);
+    // console.log({fractionToDue})
+    return fractionToDue > 0.75;
+  }
+}

@@ -17,6 +17,13 @@ body {
 .recently-done .title-cell {
   text-decoration: line-through;
 }
+.due-soon .title-cell {
+  font-weight: 700;
+}
+.due-soon .next-due-cell {
+  font-weight: 700;
+  font-size: 1.2em;
+}
 
 button {
   height: 2.5em;

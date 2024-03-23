@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useFind, useSubscribe } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 
-import { Chore, ChoresCollection, lastDoneStr, nextDueStr } from "/imports/api/chores";
+import { Chore, ChoresCollection, isDueSoon, lastDoneStr, nextDueStr } from "/imports/api/chores";
 
 export const ChoreGrid = () => {
   const isLoading = useSubscribe("chores/all");
@@ -49,6 +49,7 @@ export const ChoreGrid = () => {
             {list.map(chore => (
               <tr key={chore._id} className={[
                 (chore.lastAction && chore.lastAction > lastActionCutoff) ? 'recently-done' : '',
+                isDueSoon(chore) ? 'due-soon' : '',
               ].map(x => x).join(' ')}>
                 <td className="title-cell">
                   <Link to={`/chores/by-id/${chore._id}`}>
@@ -61,7 +62,7 @@ export const ChoreGrid = () => {
                 <td title={chore.lastAction?.toLocaleDateString() ?? 'Never'}>
                   {lastDoneStr(chore)}
                 </td>
-                <td>
+                <td className="next-due-cell">
                   {nextDueStr(chore)}
                 </td>
                 <td>
