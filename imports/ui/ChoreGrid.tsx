@@ -1,27 +1,24 @@
 import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
 import { useFind, useSubscribe } from "meteor/react-meteor-data";
-import { Meteor } from "meteor/meteor";
 
-import { Chore, ChoresCollection, isDueSoon, lastDoneStr, nextDueStr } from "/imports/api/chores";
+import { Chore, ChoresCollection, groupEmoji, nextDueDate } from "/imports/api/chores";
+import { ChoreGridRow } from "./ChoreGridRow";
 
 export const ChoreGrid = () => {
   const isLoading = useSubscribe("chores/all");
-  const chores = useFind(() => ChoresCollection.find());
+  const chores = useFind(() => ChoresCollection.find({}));
 
   if (isLoading()) {
     return <div>Loading...</div>;
   }
 
-  const byGroup = chores.reduce((map, x) => {
-    let list = map.get(x.group);
-    if (!list) {
-      list = [];
-      map.set(x.group, list);
-    }
-    list.push(x);
-    return map;
-  }, new Map<string,Array<Chore>>());
+  const choresByDue = chores
+    .map(x => ({...x, nextDue: nextDueDate(x)}))
+    .sort((a,b) => {
+      if (!a.nextDue) return 1;
+      if (!b.nextDue) return -1;
+      return a.nextDue.valueOf() - b.nextDue.valueOf();
+    });
 
   // Prevent rapid re-action
   const lastActionCutoff = new Date();
@@ -32,53 +29,15 @@ export const ChoreGrid = () => {
       <thead>
         <tr>
           <th>Chore</th>
-          <th>Interval</th>
-          <th>Last</th>
+          {/* <th>Interval</th> */}
+          {/* <th>Last</th> */}
           <th>Due</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        {[...byGroup.entries()].map(([group, list]) => (
-          <Fragment key={group}>
-            <tr>
-              <th colSpan={5}>
-                <h4>{group}</h4>
-              </th>
-            </tr>
-            {list.map(chore => (
-              <tr key={chore._id} className={[
-                (chore.lastAction && chore.lastAction > lastActionCutoff) ? 'recently-done' : '',
-                isDueSoon(chore) ? 'due-soon' : '',
-              ].map(x => x).join(' ')}>
-                <td className="title-cell">
-                  <Link to={`/chores/by-id/${chore._id}`}>
-                    {chore.title}
-                  </Link>
-                </td>
-                <td>
-                  {chore.intervalDays}d
-                </td>
-                <td title={chore.lastAction?.toLocaleDateString() ?? 'Never'}>
-                  {lastDoneStr(chore)}
-                </td>
-                <td className="next-due-cell">
-                  {nextDueStr(chore)}
-                </td>
-                <td>
-                  <button disabled={chore.lastAction && chore.lastAction > lastActionCutoff} type="button" onClick={() => {
-                    Meteor.callAsync('chores/by-id/take-action', chore._id)
-                      .catch(err => {
-                        console.error(err);
-                        alert(`API call failed:\n\n${err.message}`);
-                      });
-                  }}>
-                    ✔️
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </Fragment>
+        {choresByDue.map(chore => (
+          <ChoreGridRow key={chore._id} chore={chore} lastActionCutoff={lastActionCutoff} withEmoji={true} />
         ))}
       </tbody>
     </table>

@@ -1,7 +1,8 @@
 import React from 'react';
-import { createBrowserRouter, Navigate, Outlet, useParams } from "react-router-dom";
+import { createBrowserRouter, Link, Navigate, Outlet, useParams } from "react-router-dom";
 import { ChoreDetails } from './ChoreDetails';
 import { ChoreGrid } from './ChoreGrid';
+import { ChoreGridGrouped } from './ChoreGridGrouped';
 
 export const router = createBrowserRouter([{
   element: <>
@@ -9,11 +10,20 @@ export const router = createBrowserRouter([{
   </>,
   children: [
     {
-      path: '/',
+      path: '/chores',
       Component: () => (
         <div className="wrap">
-          <h2>All Chores</h2>
+          <Link to="/chores/grouped">Grouped</Link>
           <ChoreGrid />
+        </div>
+      ),
+    },
+    {
+      path: '/chores/grouped',
+      Component: () => (
+        <div className="wrap">
+          <Link to="/chores">Latest</Link>
+          <ChoreGridGrouped />
         </div>
       ),
     },

@@ -66,13 +66,21 @@ export function lastDoneStr(chore: Chore) {
   return `${Math.round(hoursAgo / 24)}d ago`;
 }
 
-export function nextDueStr(chore: Chore) {
+export function nextDueDate(chore: Chore) {
   if (!chore.lastAction) {
-    return 'N/A';
+    return null;
   }
 
   const nextDue = new Date(chore.lastAction);
   nextDue.setDate(nextDue.getDate() + chore.intervalDays);
+  return nextDue;
+}
+
+export function nextDueStr(chore: Chore) {
+  const nextDue = nextDueDate(chore);
+  if (!nextDue) {
+    return 'N/A';
+  }
 
   const hoursFromNow = (nextDue.valueOf() - Date.now()) / 1000 / 60 / 60;
   if (hoursFromNow < 0) return `Past Due`;
@@ -96,5 +104,15 @@ export function isDueSoon(chore: Chore) {
     const fractionToDue = 1 - (daysFromNow / chore.intervalDays);
     // console.log({fractionToDue})
     return fractionToDue > 0.75;
+  }
+}
+
+export function groupEmoji(group: string) {
+  switch (group) {
+    case 'Cat': return '🐈‍⬛';
+    case 'Household': return '🏠';
+    case 'Trash': return '🚮';
+    case 'Hygiene': return '🪥';
+    case 'Cleaning': return '🧹';
   }
 }
