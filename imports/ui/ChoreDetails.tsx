@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useFind, useSubscribe, useTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 
-import { Chore, ChoresCollection } from "/imports/api/chores";
+import { Chore, ChoresCollection, lastDoneStr, nextDueStr } from "/imports/api/chores";
 import { ChoreActionsCollection } from "../api/chore-actions";
 
 export const ChoreDetails = (props: {
@@ -43,7 +43,9 @@ export const ChoreDetails = (props: {
       <table>
         <tbody>
           <tr><th>description</th><td>{chore.description}</td></tr>
-          <tr><th>intervalDays</th><td>{chore.intervalDays}</td></tr>
+          <tr><th>interval (days)</th><td>{chore.intervalDays}</td></tr>
+          <tr><th>last done</th><td>{lastDoneStr(chore)}</td></tr>
+          <tr><th>next due</th><td>{nextDueStr(chore)}</td></tr>
         </tbody>
       </table>
       <hr />
