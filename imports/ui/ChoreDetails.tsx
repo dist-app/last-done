@@ -38,7 +38,7 @@ export const ChoreDetails = (props: {
     <div className="chore-details">
       <h2>{chore.group}</h2>
       <h1>{chore.title}</h1>
-      <Link to="/">back</Link>
+      <Link to="/chores">back</Link>
       <hr />
       <table>
         <tbody>
