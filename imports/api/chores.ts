@@ -83,7 +83,8 @@ export function nextDueStr(chore: Chore) {
   }
 
   const hoursFromNow = (nextDue.valueOf() - Date.now()) / 1000 / 60 / 60;
-  if (hoursFromNow < 0) return `Past Due`;
+  if (hoursFromNow < -24) return `${Math.round(hoursFromNow / -24)}d Late`;
+  if (hoursFromNow < 0) return `Due Today`;
   if (hoursFromNow < 24) return `In ${Math.round(hoursFromNow)}h`;
   return `In ${Math.round(hoursFromNow / 24)}d`;
 }
@@ -109,7 +110,8 @@ export function isDueSoon(chore: Chore) {
 
 export function groupEmoji(group: string) {
   switch (group) {
-    case 'Cat': return '🐈‍⬛';
+    case 'BlackCat': return '🐈‍⬛';
+    case 'OrangeCat': return '🐈';
     case 'Household': return '🏠';
     case 'Trash': return '🚮';
     case 'Hygiene': return '🪥';
