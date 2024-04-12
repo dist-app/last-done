@@ -135,5 +135,6 @@ export function groupEmoji(group: string) {
     case 'Trash': return '🚮';
     case 'Hygiene': return '🪥';
     case 'Cleaning': return '🧹';
+    case 'Financial': return '💸';
   }
 }

@@ -32,12 +32,13 @@ export const CreateChoreForm = () => {
       <label style={{display: 'block'}}>
         Group:
         <select {...register('group', { required: true })} required>
-          <option value="Cleo">🐈‍⬛ BlackCat</option>
-          <option value="Ginger">🐈 OrangeCat</option>
+          <option value="Cleo">🐈‍⬛ Cleo</option>
+          <option value="Ginger">🐈 Ginger</option>
           <option value="Household">🏠 Household</option>
           <option value="Trash">🚮 Trash</option>
           <option value="Hygiene">🪥 Hygiene</option>
           <option value="Cleaning">🧹 Cleaning</option>
+          <option value="Financial">💸 Financial</option>
         </select>
       </label>
       <label style={{display: 'block'}}>
