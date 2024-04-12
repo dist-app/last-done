@@ -18,6 +18,24 @@ export interface Chore {
 export const ChoresCollection = new Mongo.Collection<Chore>('Chores');
 
 Meteor.methods({
+
+  async 'chores/create'(group: unknown, title: unknown, description: unknown, intervalDays: unknown) {
+    check(group, String);
+    check(title, String);
+    check(description, String);
+    check(intervalDays, Number);
+
+    const _id = await ChoresCollection.insertAsync({
+      userId: 'dan',
+      title,
+      group,
+      description: description || undefined,
+      intervalDays,
+      createdAt: new Date(),
+    });
+    return _id;
+  },
+
   async 'chores/by-id/take-action'(choreId: unknown) {
     check(choreId, String);
 
@@ -110,8 +128,9 @@ export function isDueSoon(chore: Chore) {
 
 export function groupEmoji(group: string) {
   switch (group) {
-    case 'BlackCat': return '🐈‍⬛';
-    case 'OrangeCat': return '🐈';
+    // TODO: duplicated with CreateChoreForm
+    case 'Cleo': return '🐈‍⬛';
+    case 'Ginger': return '🐈';
     case 'Household': return '🏠';
     case 'Trash': return '🚮';
     case 'Hygiene': return '🪥';

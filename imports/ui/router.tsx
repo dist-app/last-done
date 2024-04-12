@@ -3,6 +3,7 @@ import { createBrowserRouter, Link, Navigate, Outlet, useParams } from "react-ro
 import { ChoreDetails } from './ChoreDetails';
 import { ChoreGrid } from './ChoreGrid';
 import { ChoreGridGrouped } from './ChoreGridGrouped';
+import { CreateChoreForm } from './CreateChoreForm';
 
 export const router = createBrowserRouter([{
   element: <>
@@ -13,7 +14,10 @@ export const router = createBrowserRouter([{
       path: '/chores',
       Component: () => (
         <div className="wrap">
-          <Link to="/chores/grouped">Grouped</Link>
+          <div style={{display: 'flex', flexDirection: 'row', gap: '1em'}}>
+            <Link to="/chores/grouped">Grouped</Link>
+            <Link to="/chores/create">Create</Link>
+          </div>
           <ChoreGrid />
         </div>
       ),
@@ -24,6 +28,14 @@ export const router = createBrowserRouter([{
         <div className="wrap">
           <Link to="/chores">Latest</Link>
           <ChoreGridGrouped />
+        </div>
+      ),
+    },
+    {
+      path: '/chores/create',
+      Component: () => (
+        <div className="wrap">
+          <CreateChoreForm />
         </div>
       ),
     },
