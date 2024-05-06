@@ -71,14 +71,17 @@ Meteor.methods({
         : undefined,
     });
   },
-})
+});
 
 export function lastDoneStr(chore: Chore) {
   if (!chore.lastAction) {
     return 'Never';
   }
+  return timeAgoStr(chore.lastAction);
+}
 
-  const hoursAgo = (Date.now() - chore.lastAction.valueOf()) / 1000 / 60 / 60;
+export function timeAgoStr(time: Date) {
+  const hoursAgo = (Date.now() - time.valueOf()) / 1000 / 60 / 60;
   if (hoursAgo < 1) return `Now`;
   if (hoursAgo < 24) return `${Math.round(hoursAgo)}h ago`;
   return `${Math.round(hoursAgo / 24)}d ago`;

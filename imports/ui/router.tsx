@@ -4,6 +4,7 @@ import { ChoreDetails } from './ChoreDetails';
 import { ChoreGrid } from './ChoreGrid';
 import { ChoreGridGrouped } from './ChoreGridGrouped';
 import { CreateChoreForm } from './CreateChoreForm';
+import { TaskGrid } from './TaskGrid';
 
 export const router = createBrowserRouter([{
   element: <>
@@ -11,14 +12,56 @@ export const router = createBrowserRouter([{
   </>,
   children: [
     {
+      path: '/',
+      Component: () => (
+        <div className="wrap">
+          <h1>
+            Chores Due
+            {" "}
+            <span style={{fontSize: '0.7em'}}>
+              [
+                <Link to="/chores">
+                  See All
+                </Link>
+              ]
+            </span>
+            {" "}
+            <span style={{fontSize: '0.7em'}}>
+              [
+                <Link to="/chores/create">
+                  Add
+                </Link>
+              ]
+            </span>
+          </h1>
+          <ChoreGrid showCompleted={false} />
+          <hr />
+          <h1>
+            Tasks
+            {" "}
+            <span style={{fontSize: '0.7em'}}>
+              [
+                <Link to="/tasks">
+                  See All
+                </Link>
+              ]
+            </span>
+          </h1>
+          <TaskGrid />
+        </div>
+      ),
+    },
+
+    {
       path: '/chores',
       Component: () => (
         <div className="wrap">
           <div style={{display: 'flex', flexDirection: 'row', gap: '1em'}}>
-            <Link to="/chores/grouped">Grouped</Link>
+            <Link to="/">Home</Link> |
+            <Link to="/chores/grouped">Grouped</Link> |
             <Link to="/chores/create">Create</Link>
           </div>
-          <ChoreGrid />
+          <ChoreGrid showCompleted={true} />
         </div>
       ),
     },
@@ -52,6 +95,19 @@ export const router = createBrowserRouter([{
           </div>
         );
       },
+    },
+
+    {
+      path: '/tasks',
+      Component: () => (
+        <div className="wrap">
+          <div style={{display: 'flex', flexDirection: 'row', gap: '1em'}}>
+            <Link to="/">Home</Link> |
+            <Link to="/tasks/create">Create</Link>
+          </div>
+          <TaskGrid />
+        </div>
+      ),
     },
   ],
 }]);

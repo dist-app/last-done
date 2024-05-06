@@ -39,7 +39,7 @@ export const ChoreGridGrouped = () => {
           {/* <th>Interval</th> */}
           {/* <th>Last</th> */}
           <th>Due</th>
-          <th></th>
+          <th style={{width: '2em'}}></th>
         </tr>
       </thead>
       <tbody>

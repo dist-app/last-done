@@ -19,7 +19,7 @@ export const CreateChoreForm = () => {
     intervalDays: string;
   }) {
     try {
-      const id = await Meteor.callAsync('chores/create', data.group, data.title, data.description,, parseInt(data.intervalDays));
+      const id = await Meteor.callAsync('chores/create', data.group, data.title, data.description, parseInt(data.intervalDays));
       navigate(`/chores/by-id/${id}`);
     } catch (err) {
       alert(`Creation failed: ${(err as Error).message}`);
