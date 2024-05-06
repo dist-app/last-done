@@ -8,6 +8,7 @@ export const CreateChoreForm = () => {
   const {
     register,
     handleSubmit,
+    formState,
   } = useForm();
 
   const navigate = useNavigate();
@@ -53,7 +54,9 @@ export const CreateChoreForm = () => {
         Interval in days:
         <input {...register('intervalDays', { pattern: /\d+/, required: true })} required pattern="\d+" size={4} />
       </label>
-      <button type="submit">Create</button>
+      <button type="submit" disabled={formState.isSubmitting}>
+        Create
+      </button>
     </form>
   );
 };

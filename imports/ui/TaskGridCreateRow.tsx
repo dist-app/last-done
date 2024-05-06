@@ -9,6 +9,7 @@ export function TaskGridCreateRow(props: {
     register,
     handleSubmit,
     reset,
+    formState,
   } = useForm();
 
   async function onSubmit(data: {
@@ -56,7 +57,7 @@ export function TaskGridCreateRow(props: {
             }} />
       </td>
       <td>
-        <button form="task-create" type="submit">
+        <button form="task-create" type="submit" disabled={formState.isSubmitting}>
           ➕
         </button>
       </td>
