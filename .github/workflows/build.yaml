@@ -15,11 +15,12 @@ jobs:
 
     - run: meteor npm install
 
-    - id: tempdir
+    - name: Select temp directory
+      id: tempdir
       run: echo "path=$(mktemp -d)" >> "$GITHUB_OUTPUT"
 
     - name: Build app bundles
-      run: meteor build --directory ${{ steps.tempdir.outputs.path }} --platform web.browser
+      run: meteor build --directory ${{ steps.tempdir.outputs.path }} --platforms web.browser
 
     - run: ls -lsh bundle/programs/web.browser
       working-directory: ${{ steps.tempdir.outputs.path }}
