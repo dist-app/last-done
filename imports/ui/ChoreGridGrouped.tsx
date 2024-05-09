@@ -1,8 +1,9 @@
 import React, { Fragment } from "react";
 import { useFind, useSubscribe } from "meteor/react-meteor-data";
 
-import { Chore, ChoresCollection, groupEmoji } from "/imports/api/chores";
+import { Chore, ChoresCollection } from "/imports/api/chores";
 import { ChoreGridRow } from "./ChoreGridRow";
+import { groupEmoji } from "/imports/api/groups";
 
 export const ChoreGridGrouped = () => {
   const isLoading = useSubscribe("chores/all");

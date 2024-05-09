@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import { useForm } from 'react-hook-form';
+import { AllGroups } from "../api/groups";
 
 export const CreateChoreForm = () => {
 
@@ -33,13 +34,9 @@ export const CreateChoreForm = () => {
       <label style={{display: 'block'}}>
         Group:
         <select {...register('group', { required: true })} required>
-          <option value="Cleo">🐈‍⬛ Cleo</option>
-          <option value="Ginger">🐈 Ginger</option>
-          <option value="Household">🏠 Household</option>
-          <option value="Trash">🚮 Trash</option>
-          <option value="Hygiene">🪥 Hygiene</option>
-          <option value="Cleaning">🧹 Cleaning</option>
-          <option value="Financial">💸 Financial</option>
+          {AllGroups.map(group => (
+            <option key={group.name} value={group.name}>{group.emoji} {group.name}</option>
+          ))}
         </select>
       </label>
       <label style={{display: 'block'}}>

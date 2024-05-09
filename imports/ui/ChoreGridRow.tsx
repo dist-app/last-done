@@ -2,7 +2,8 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Link } from 'react-router-dom';
 
-import { Chore, groupEmoji, isDueSoon, lastDoneStr, nextDueStr } from '/imports/api/chores';
+import { Chore, isDueSoon, nextDueStr } from '/imports/api/chores';
+import { groupEmoji } from "/imports/api/groups";
 
 export function ChoreGridRow(props: {
   chore: Chore;

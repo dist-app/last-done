@@ -3,7 +3,8 @@ import { Meteor } from 'meteor/meteor';
 import { Link } from 'react-router-dom';
 
 import { Task } from '/imports/api/tasks';
-import { groupEmoji, timeAgoStr } from '../api/chores';
+import { timeAgoStr } from '../api/chores';
+import { groupEmoji } from "/imports/api/groups";
 
 export function TaskGridRow(props: {
   task: Task;

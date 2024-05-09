@@ -2,6 +2,7 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 
 import { useForm } from 'react-hook-form';
+import { AllGroups } from '../api/groups';
 
 export function TaskGridCreateRow(props: {
 }) {
@@ -38,13 +39,9 @@ export function TaskGridCreateRow(props: {
               fontSize: '0.85em',
               boxSizing: 'border-box',
             }}>
-            <option value="Cleo">🐈‍⬛ Cleo</option>
-            <option value="Ginger">🐈 Ginger</option>
-            <option value="Household">🏠 Household</option>
-            <option value="Trash">🚮 Trash</option>
-            <option value="Hygiene">🪥 Hygiene</option>
-            <option value="Cleaning">🧹 Cleaning</option>
-            <option value="Financial">💸 Financial</option>
+            {AllGroups.map(group => (
+              <option key={group.name} value={group.name}>{group.emoji} {group.name}</option>
+            ))}
           </select>
         </form>
       </td>

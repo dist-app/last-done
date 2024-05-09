@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { useFind, useSubscribe } from "meteor/react-meteor-data";
 
-import { Chore, ChoresCollection, groupEmoji, nextDueDate } from "/imports/api/chores";
+import { ChoresCollection, nextDueDate } from "/imports/api/chores";
 import { ChoreGridRow } from "./ChoreGridRow";
 
 export const ChoreGrid = (props: {

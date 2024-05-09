@@ -128,16 +128,3 @@ export function isDueSoon(chore: Chore) {
     return fractionToDue > 0.75;
   }
 }
-
-export function groupEmoji(group: string) {
-  switch (group) {
-    // TODO: duplicated with CreateChoreForm
-    case 'Cleo': return '🐈‍⬛';
-    case 'Ginger': return '🐈';
-    case 'Household': return '🏠';
-    case 'Trash': return '🚮';
-    case 'Hygiene': return '🪥';
-    case 'Cleaning': return '🧹';
-    case 'Financial': return '💸';
-  }
-}
