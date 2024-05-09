@@ -11,11 +11,10 @@ jobs:
       id-token: write
     steps:
 
-    - name: configure aws credentials
-      uses: aws-actions/configure-aws-credentials@v3
+    - uses: aws-actions/configure-aws-credentials@v3
       with:
-        role-to-assume: arn:aws:iam::1234567890:role/example-role
-        role-session-name: samplerolesession
+        role-to-assume: arn:aws:iam::414064234042:role/gha-deployer
+        role-session-name: gha-${{ github.run_id }}
         aws-region: ${{ env.AWS_REGION }}
 
     - uses: meteorengineer/setup-meteor@v2
@@ -26,6 +25,7 @@ jobs:
       id: tempdir
       run: echo "path=$(mktemp -d)" >> "$GITHUB_OUTPUT"
 
+
     - uses: actions/checkout@v4
 
     - run: meteor npm install
@@ -33,5 +33,14 @@ jobs:
     - name: Build app bundles
       run: meteor build --directory ${{ steps.tempdir.outputs.path }} #--platforms web.browser
 
-    - run: ls -lsh bundle/programs/web.browser
-      working-directory: ${{ steps.tempdir.outputs.path }}
+    - name: Upload to S3
+      working-directory: ${{ steps.tempdir.outputs.path }}/bundle/programs/web.browser
+      run: |
+        ls -lsh
+        buildPrefix=uber.danopia.net/meteor-bundles/last-done/${{ github.sha }}/web.browser
+        aws s3 cp --content-type "application/javascript; charset=utf-8" \
+          *.js s3://$buildPrefix/app.js
+        aws s3 cp --content-type "text/css; charset=utf-8" \
+          *.css s3://$buildPrefix/app.css
+        echo https://$buildPrefix/app.js
+        echo https://$buildPrefix/app.css
