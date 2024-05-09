@@ -1,0 +1,25 @@
+name: Build
+on:
+  push: {}
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v4
+    - uses: meteorengineer/setup-meteor@v2
+      with:
+        meteor-release: '2.13.3'
+
+    - run: meteor npm install
+
+    - id: tempdir
+      run: echo "path=$(mktemp -d)" >> "$GITHUB_OUTPUT"
+
+    - name: Build app bundles
+      run: meteor build --directory ${{ steps.tempdir.outputs.path }} --platform web.browser
+
+    - run: ls -lsh bundle/programs/web.browser
+      working-directory: ${{ steps.tempdir.outputs.path }}
