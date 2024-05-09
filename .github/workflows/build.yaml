@@ -15,7 +15,7 @@ jobs:
       with:
         role-to-assume: arn:aws:iam::414064234042:role/gha-deployer
         role-session-name: gha-${{ github.run_id }}
-        aws-region: ${{ env.AWS_REGION }}
+        aws-region: eu-west-1
 
     - uses: meteorengineer/setup-meteor@v2
       with:
