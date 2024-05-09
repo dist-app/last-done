@@ -14,26 +14,26 @@ jobs:
     - uses: aws-actions/configure-aws-credentials@v3
       with:
         role-to-assume: arn:aws:iam::414064234042:role/gha-deployer
-        role-session-name: gha-${{ github.run_id }}
+        role-session-name: gha-run-${{ github.run_id }}
         aws-region: eu-west-1
 
     - uses: meteorengineer/setup-meteor@v2
       with:
         meteor-release: '2.13.3'
 
+    - uses: actions/checkout@v4
+
+    - name: Install NPM dependencies
+      run: meteor npm install
+
     - name: Select temp directory
       id: tempdir
       run: echo "path=$(mktemp -d)" >> "$GITHUB_OUTPUT"
 
-
-    - uses: actions/checkout@v4
-
-    - run: meteor npm install
-
     - name: Build app bundles
       run: meteor build --directory ${{ steps.tempdir.outputs.path }} #--platforms web.browser
 
-    - name: Upload to S3
+    - name: Upload browser bundle to S3
       working-directory: ${{ steps.tempdir.outputs.path }}/bundle/programs/web.browser
       run: |
         ls -lsh
