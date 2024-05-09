@@ -6,18 +6,29 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
 
-    - uses: actions/checkout@v4
+    - name: configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        role-to-assume: arn:aws:iam::1234567890:role/example-role
+        role-session-name: samplerolesession
+        aws-region: ${{ env.AWS_REGION }}
+
     - uses: meteorengineer/setup-meteor@v2
       with:
         meteor-release: '2.13.3'
 
-    - run: meteor npm install
-
     - name: Select temp directory
       id: tempdir
       run: echo "path=$(mktemp -d)" >> "$GITHUB_OUTPUT"
+
+    - uses: actions/checkout@v4
+
+    - run: meteor npm install
 
     - name: Build app bundles
       run: meteor build --directory ${{ steps.tempdir.outputs.path }} #--platforms web.browser
