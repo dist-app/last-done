@@ -19,7 +19,7 @@ jobs:
 
     - uses: meteorengineer/setup-meteor@v2
       with:
-        meteor-release: '2.13.3'
+        meteor-release: '2.15'
 
     - uses: actions/checkout@v4
 
