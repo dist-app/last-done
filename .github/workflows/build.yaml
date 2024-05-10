@@ -33,7 +33,20 @@ jobs:
     - name: Build app bundles
       run: meteor build --directory ${{ steps.tempdir.outputs.path }} #--platforms web.browser
 
-    - name: Upload browser bundle to S3
+    - name: Create manifest
+      working-directory: ${{ steps.tempdir.outputs.path }}/bundle/programs
+      run: >
+        echo '{"web.browser":{"hashes":{"js":"'$(basename web.browser/*.js .js)'","css":"'$(basename web.browser/*.css .css)'"},"html":'$(jq -cn --rawfile body web.browser/body.html --rawfile head web.browser/head.html '$ARGS.named')'},"server":'$(jq -c . < server/config.json)'}' | tee manifest.json | jq .
+
+    - name: Upload manifest to S3
+      working-directory: ${{ steps.tempdir.outputs.path }}/bundle/programs
+      run: |
+        buildPrefix=uber.danopia.net/meteor-bundles/last-done/${{ github.sha }}
+        aws s3 cp --content-type "application/json; charset=utf-8" \
+          manifest.json s3://$buildPrefix/manifest.json
+        echo https://$buildPrefix/manifest.json
+
+    - name: Upload web.browser bundle to S3
       working-directory: ${{ steps.tempdir.outputs.path }}/bundle/programs/web.browser
       run: |
         ls -lsh
