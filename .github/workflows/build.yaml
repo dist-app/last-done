@@ -44,6 +44,8 @@ jobs:
       run: echo "path=$(mktemp -d)" | tee -a "$GITHUB_OUTPUT"
 
     - name: Build app bundles
+      env:
+        METEOR_DISABLE_OPTIMISTIC_CACHING: 1
       run: meteor build --directory ${{ steps.tempdir.outputs.path }} --platforms web.browser
 
     - name: Create manifest
