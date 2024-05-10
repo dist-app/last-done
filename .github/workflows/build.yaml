@@ -31,7 +31,7 @@ jobs:
       run: echo "path=$(mktemp -d)" >> "$GITHUB_OUTPUT"
 
     - name: Build app bundles
-      run: meteor build --directory ${{ steps.tempdir.outputs.path }} #--platforms web.browser
+      run: meteor build --directory ${{ steps.tempdir.outputs.path }} --platforms web.browser
 
     - name: Create manifest
       working-directory: ${{ steps.tempdir.outputs.path }}/bundle/programs
