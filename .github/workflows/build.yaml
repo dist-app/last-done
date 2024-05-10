@@ -11,7 +11,7 @@ jobs:
       id-token: write
     steps:
 
-    - uses: aws-actions/configure-aws-credentials@v3
+    - uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::414064234042:role/gha-deployer
         role-session-name: gha-run-${{ github.run_id }}
