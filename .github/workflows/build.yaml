@@ -24,7 +24,7 @@ jobs:
       run: echo "release=$(cut -d@ -f2 < .meteor/release)" | tee -a "$GITHUB_OUTPUT"
     - name: Cache Meteor ${{ steps.find-meteor.outputs.release }}
       id: cache-meteor
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.meteor
