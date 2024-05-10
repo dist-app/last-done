@@ -17,10 +17,12 @@ jobs:
         role-session-name: gha-run-${{ github.run_id }}
         aws-region: eu-west-1
 
+    - uses: actions/checkout@v4
+
     - name: Read Meteor release
       id: meteor
       run: echo "release=$(cut -d@ -f2 < .meteor/release)" >> "$GITHUB_OUTPUT"
-    - name: Cache Meteor release
+    - name: Cache Meteor ${{ steps.meteor.outputs.release }}
       id: cache-meteor
       uses: actions/cache@v3
       with:
@@ -32,12 +34,10 @@ jobs:
       with:
         meteor-release: ${{ steps.meteor.outputs.release }}
 
-    - uses: actions/checkout@v4
-
     - name: Install NPM dependencies
       run: meteor npm install
 
-    - name: Select temp directory
+    - name: Create temp directory
       id: tempdir
       run: echo "path=$(mktemp -d)" >> "$GITHUB_OUTPUT"
 
@@ -48,14 +48,6 @@ jobs:
       working-directory: ${{ steps.tempdir.outputs.path }}/bundle/programs
       run: >
         echo '{"web.browser":{"hashes":{"js":"'$(basename web.browser/*.js .js)'","css":"'$(basename web.browser/*.css .css)'"},"html":'$(jq -cn --rawfile body web.browser/body.html --rawfile head web.browser/head.html '$ARGS.named')'},"server":'$(jq -c . < server/config.json)'}' | tee manifest.json | jq .
-
-    - name: Upload manifest to S3
-      working-directory: ${{ steps.tempdir.outputs.path }}/bundle/programs
-      run: |
-        buildPrefix=uber.danopia.net/meteor-bundles/last-done/${{ github.sha }}
-        aws s3 cp --content-type "application/json; charset=utf-8" \
-          manifest.json s3://$buildPrefix/manifest.json
-        echo https://$buildPrefix/manifest.json
 
     - name: Upload web.browser bundle to S3
       working-directory: ${{ steps.tempdir.outputs.path }}/bundle/programs/web.browser
@@ -68,3 +60,11 @@ jobs:
           *.css s3://$buildPrefix/app.css
         echo https://$buildPrefix/app.js
         echo https://$buildPrefix/app.css
+
+    - name: Upload manifest to S3
+      working-directory: ${{ steps.tempdir.outputs.path }}/bundle/programs
+      run: |
+        buildPrefix=uber.danopia.net/meteor-bundles/last-done/${{ github.sha }}
+        aws s3 cp --content-type "application/json; charset=utf-8" \
+          manifest.json s3://$buildPrefix/manifest.json
+        echo https://$buildPrefix/manifest.json
