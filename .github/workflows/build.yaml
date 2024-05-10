@@ -21,7 +21,7 @@ jobs:
 
     - name: Read Meteor release
       id: find-meteor
-      run: echo "release=$(cut -d@ -f2 < .meteor/release)" >> "$GITHUB_OUTPUT"
+      run: echo "release=$(cut -d@ -f2 < .meteor/release)" | tee -a "$GITHUB_OUTPUT"
     - name: Cache Meteor ${{ steps.find-meteor.outputs.release }}
       id: cache-meteor
       uses: actions/cache@v3
@@ -41,7 +41,7 @@ jobs:
 
     - name: Create temp directory
       id: tempdir
-      run: echo "path=$(mktemp -d)" >> "$GITHUB_OUTPUT"
+      run: echo "path=$(mktemp -d)" | tee -a "$GITHUB_OUTPUT"
 
     - name: Build app bundles
       run: meteor build --directory ${{ steps.tempdir.outputs.path }} --platforms web.browser
