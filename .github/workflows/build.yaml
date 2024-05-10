@@ -26,7 +26,9 @@ jobs:
       id: cache-meteor
       uses: actions/cache@v3
       with:
-        path: ~/.meteor
+        path: |
+          ~/.meteor
+          /usr/local/bin/meteor
         key: ${{ runner.os }}/meteor-${{ steps.meteor.outputs.release }}
     - name: Setup Meteor ${{ steps.meteor.outputs.release }}
       if: ${{ steps.cache-meteor.outputs.cache-hit != 'true' }}
