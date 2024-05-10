@@ -17,9 +17,20 @@ jobs:
         role-session-name: gha-run-${{ github.run_id }}
         aws-region: eu-west-1
 
-    - uses: meteorengineer/setup-meteor@v2
+    - name: Read Meteor release
+      id: meteor
+      run: echo "release=$(cut -d@ -f2 < .meteor/release)" >> "$GITHUB_OUTPUT"
+    - name: Cache Meteor release
+      id: cache-meteor
+      uses: actions/cache@v3
       with:
-        meteor-release: '2.15'
+        path: ~/.meteor
+        key: ${{ runner.os }}/meteor-${{ steps.meteor.outputs.release }}
+    - name: Setup Meteor ${{ steps.meteor.outputs.release }}
+      if: ${{ steps.cache-meteor.outputs.cache-hit != 'true' }}
+      uses: meteorengineer/setup-meteor@v2
+      with:
+        meteor-release: ${{ steps.meteor.outputs.release }}
 
     - uses: actions/checkout@v4
 
