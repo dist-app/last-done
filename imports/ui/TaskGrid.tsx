@@ -7,18 +7,15 @@ import { TaskGridCreateRow } from "./TaskGridCreateRow";
 
 export const TaskGrid = () => {
   const isLoading = useSubscribe("tasks/active");
-  const tasks = useFind(() => TasksCollection.find({}));
+  const tasks = useFind(() => TasksCollection.find({}, {
+    sort: {
+      createdAt: 1,
+    }
+  }));
 
   if (isLoading()) {
     return <div>Loading...</div>;
   }
-
-  const tasksByAdded = tasks
-    .sort((a,b) => {
-      if (!a.createdAt) return 1;
-      if (!b.createdAt) return -1;
-      return a.createdAt.valueOf() - b.createdAt.valueOf();
-    });
 
   return (<Fragment>
     <table className="chore-grid">
@@ -30,7 +27,7 @@ export const TaskGrid = () => {
         </tr>
       </thead>
       <tbody>
-        {tasksByAdded.map(task => (
+        {tasks.map(task => (
           <TaskGridRow key={task._id} task={task} withEmoji={true} />
         ))}
       </tbody>
