@@ -1,12 +1,17 @@
 version: 2
 updates:
-    - package-ecosystem: npm
-      directory: '/'
-      schedule:
-          interval: weekly
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+        interval: weekly
 
-      groups:
-        opentelemetry:
-          patterns: ["@opentelemetry/*"]
-        dev-deps:
-          dependency-type: development
+    groups:
+      opentelemetry:
+        patterns: ["@opentelemetry/*"]
+      dev-deps:
+        dependency-type: development
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
