@@ -20,21 +20,21 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Read Meteor release
-      id: meteor
+      id: find-meteor
       run: echo "release=$(cut -d@ -f2 < .meteor/release)" >> "$GITHUB_OUTPUT"
-    - name: Cache Meteor ${{ steps.meteor.outputs.release }}
+    - name: Cache Meteor ${{ steps.find-meteor.outputs.release }}
       id: cache-meteor
       uses: actions/cache@v3
       with:
         path: |
           ~/.meteor
           /usr/local/bin/meteor
-        key: ${{ runner.os }}/meteor-${{ steps.meteor.outputs.release }}
-    - name: Setup Meteor ${{ steps.meteor.outputs.release }}
+        key: ${{ runner.os }}/meteor-${{ steps.find-meteor.outputs.release }}
+    - name: Setup Meteor ${{ steps.find-meteor.outputs.release }}
       if: ${{ steps.cache-meteor.outputs.cache-hit != 'true' }}
       uses: meteorengineer/setup-meteor@v2
       with:
-        meteor-release: ${{ steps.meteor.outputs.release }}
+        meteor-release: ${{ steps.find-meteor.outputs.release }}
 
     - name: Install NPM dependencies
       run: meteor npm install
