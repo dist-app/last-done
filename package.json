@@ -16,12 +16,12 @@
     "react-router-dom": "^6"
   },
   "devDependencies": {
-    "@types/mocha": "^8",
-    "@types/node": "^18",
+    "@types/mocha": "^10",
+    "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/react-router-dom": "^5",
-    "typescript": "^4"
+    "typescript": "^5"
   },
   "meteor": {
     "mainModule": {
