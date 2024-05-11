@@ -18,14 +18,14 @@ export function TaskGridRow(props: {
       // isDueSoon(task) ? 'due-soon' : '',
     ].map(x => x).join(' ')}>
       <td className="title-cell">
-        <Link to={`/tasks/by-id/${task._id}`}>
+        {/* <Link to={`/tasks/by-id/${task._id}`}> */}
           {props.withEmoji ? (
             <span style={{fontSize: '1.25em', margin: '0 0.2em'}}>
               {groupEmoji(task.group)}
             </span>
           ) : []}
           {task.title}
-        </Link>
+        {/* </Link> */}
       </td>
       <td className="next-due-cell">
         {timeAgoStr(task.createdAt)}
