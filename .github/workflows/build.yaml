@@ -29,15 +29,35 @@ jobs:
         path: |
           ~/.meteor
           /usr/local/bin/meteor
-        key: ${{ runner.os }}/meteor-${{ steps.find-meteor.outputs.release }}
+        key: meteor-${{ steps.find-meteor.outputs.release }}
     - name: Setup Meteor ${{ steps.find-meteor.outputs.release }}
       if: ${{ steps.cache-meteor.outputs.cache-hit != 'true' }}
       uses: meteorengineer/setup-meteor@v2
       with:
         meteor-release: ${{ steps.find-meteor.outputs.release }}
 
+    - name: Cache NPM
+      uses: actions/cache@v4
+      with:
+        path: ~/.npm
+        key: npm-${{ github.ref }}-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          npm-${{ github.ref }}-
+
     - name: Install NPM dependencies
       run: meteor npm install
+
+    - name: Cache Meteor Local
+      uses: actions/cache@v4
+      with:
+        path: |
+          .meteor/local/resolver-result-cache.json
+          .meteor/local/plugin-cache
+          .meteor/local/isopacks
+          .meteor/local/bundler-cache/scanner
+        key: meteorlocal-${{ github.ref }}-${{ github.sha }}
+        restore-keys: |
+          meteorlocal-${{ github.ref }}-
 
     - name: Create temp directory
       id: tempdir
