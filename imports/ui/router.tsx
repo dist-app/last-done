@@ -108,7 +108,7 @@ export const router = createBrowserRouter([{
       Component: () => (
         <div className="wrap">
           <h1>
-            Chores Grouped
+            All Chores
             {" "}
             <span style={{fontSize: '0.7em'}}>
               [
