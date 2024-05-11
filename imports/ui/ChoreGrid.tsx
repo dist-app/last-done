@@ -1,9 +1,8 @@
 import React from "react";
-import { useFind, useSubscribe } from "meteor/react-meteor-data";
+import { useFind } from "meteor/react-meteor-data";
 
 import { ChoresCollection, nextDueDate } from "/imports/api/chores";
 import { ChoreGridRow } from "./ChoreGridRow";
-import { cachedSubscription } from "./sub-cache";
 
 export const ChoreGrid = (props: {
   showCompleted: boolean;

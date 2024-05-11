@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { useFind, useSubscribe } from "meteor/react-meteor-data";
+import { useFind } from "meteor/react-meteor-data";
 
 import { TasksCollection } from "/imports/api/tasks";
 import { TaskGridRow } from "./TaskGridRow";

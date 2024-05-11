@@ -1,9 +1,8 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useFind, useSubscribe, useTracker } from "meteor/react-meteor-data";
-import { Meteor } from "meteor/meteor";
 
-import { Chore, ChoresCollection, lastDoneStr, nextDueStr } from "/imports/api/chores";
+import { ChoresCollection, lastDoneStr, nextDueStr } from "/imports/api/chores";
 import { ChoreActionsCollection } from "../api/chore-actions";
 
 export const ChoreDetails = (props: {
