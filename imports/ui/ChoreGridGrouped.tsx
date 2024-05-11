@@ -6,17 +6,12 @@ import { ChoreGridRow } from "./ChoreGridRow";
 import { groupEmoji } from "/imports/api/groups";
 
 export const ChoreGridGrouped = () => {
-  const isLoading = useSubscribe("chores/all");
   const chores = useFind(() => ChoresCollection.find({}, {
     sort: {
       group: 1,
       title: 1,
     },
   }));
-
-  if (isLoading()) {
-    return <div>Loading...</div>;
-  }
 
   const byGroup = chores.reduce((map, x) => {
     let list = map.get(x.group);

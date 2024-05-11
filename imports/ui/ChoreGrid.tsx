@@ -3,16 +3,12 @@ import { useFind, useSubscribe } from "meteor/react-meteor-data";
 
 import { ChoresCollection, nextDueDate } from "/imports/api/chores";
 import { ChoreGridRow } from "./ChoreGridRow";
+import { cachedSubscription } from "./sub-cache";
 
 export const ChoreGrid = (props: {
   showCompleted: boolean;
 }) => {
-  const isLoading = useSubscribe("chores/all");
   const chores = useFind(() => ChoresCollection.find({}));
-
-  if (isLoading()) {
-    return <div>Loading...</div>;
-  }
 
   // Prevent rapid re-action
   const lastActionCutoff = new Date();

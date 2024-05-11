@@ -6,16 +6,11 @@ import { TaskGridRow } from "./TaskGridRow";
 import { TaskGridCreateRow } from "./TaskGridCreateRow";
 
 export const TaskGrid = () => {
-  const isLoading = useSubscribe("tasks/active");
   const tasks = useFind(() => TasksCollection.find({}, {
     sort: {
       createdAt: 1,
     }
   }));
-
-  if (isLoading()) {
-    return <div>Loading...</div>;
-  }
 
   return (<Fragment>
     <table className="chore-grid">
