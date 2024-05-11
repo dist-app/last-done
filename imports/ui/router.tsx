@@ -15,8 +15,8 @@ export const router = createBrowserRouter([{
     {
       path: '/',
       loader: () => Promise.all([
-        cachedSubscription('/chores/all', []),
-        cachedSubscription('/tasks/active', []),
+        cachedSubscription('chores/all', []),
+        cachedSubscription('tasks/active', []),
       ]),
       Component: () => (
         <div className="wrap">
@@ -60,7 +60,7 @@ export const router = createBrowserRouter([{
     {
       path: '/chores',
       loader: () => Promise.all([
-        cachedSubscription('/chores/all', []),
+        cachedSubscription('chores/all', []),
       ]),
       Component: () => (
         <div className="wrap">
@@ -76,7 +76,7 @@ export const router = createBrowserRouter([{
     {
       path: '/chores/grouped',
       loader: () => Promise.all([
-        cachedSubscription('/chores/all', []),
+        cachedSubscription('chores/all', []),
       ]),
       Component: () => (
         <div className="wrap">
@@ -96,7 +96,7 @@ export const router = createBrowserRouter([{
     {
       path: '/chores/by-id/:choreId',
       // loader: ({ params }) => Promise.all([
-      //   cachedSubscription('/access-requests/by-id', [params.requestId]),
+      //   cachedSubscription('access-requests/by-id', [params.requestId]),
       // ]),
       Component: () => {
         const { choreId } = useParams();
@@ -111,7 +111,7 @@ export const router = createBrowserRouter([{
     {
       path: '/tasks',
       loader: () => Promise.all([
-        cachedSubscription('/tasks/active', []),
+        cachedSubscription('tasks/active', []),
       ]),
       Component: () => (
         <div className="wrap">
