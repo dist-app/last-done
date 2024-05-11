@@ -5,6 +5,7 @@ import { ChoreGrid } from './ChoreGrid';
 import { ChoreGridGrouped } from './ChoreGridGrouped';
 import { CreateChoreForm } from './CreateChoreForm';
 import { TaskGrid } from './TaskGrid';
+import { cachedSubscription } from './sub-cache';
 
 export const router = createBrowserRouter([{
   element: <>
@@ -13,6 +14,10 @@ export const router = createBrowserRouter([{
   children: [
     {
       path: '/',
+      loader: () => Promise.all([
+        cachedSubscription('chores/all', []),
+        cachedSubscription('tasks/active', []),
+      ]),
       Component: () => (
         <div className="wrap">
           <h1>
@@ -54,6 +59,9 @@ export const router = createBrowserRouter([{
 
     {
       path: '/chores',
+      loader: () => Promise.all([
+        cachedSubscription('chores/all', []),
+      ]),
       Component: () => (
         <div className="wrap">
           <div style={{display: 'flex', flexDirection: 'row', gap: '1em'}}>
@@ -67,6 +75,9 @@ export const router = createBrowserRouter([{
     },
     {
       path: '/chores/grouped',
+      loader: () => Promise.all([
+        cachedSubscription('chores/all', []),
+      ]),
       Component: () => (
         <div className="wrap">
           <Link to="/chores">Latest</Link>
@@ -85,7 +96,7 @@ export const router = createBrowserRouter([{
     {
       path: '/chores/by-id/:choreId',
       // loader: ({ params }) => Promise.all([
-      //   cachedSubscription('/access-requests/by-id', [params.requestId]),
+      //   cachedSubscription('access-requests/by-id', [params.requestId]),
       // ]),
       Component: () => {
         const { choreId } = useParams();
@@ -99,6 +110,9 @@ export const router = createBrowserRouter([{
 
     {
       path: '/tasks',
+      loader: () => Promise.all([
+        cachedSubscription('tasks/active', []),
+      ]),
       Component: () => (
         <div className="wrap">
           <div style={{display: 'flex', flexDirection: 'row', gap: '1em'}}>

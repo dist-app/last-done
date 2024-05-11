@@ -3,7 +3,7 @@
 dan auth terraform | source
 set commit (git rev-parse HEAD)
 set tempdir (mktemp -d)
-meteor build --directory $tempdir
+env METEOR_DISABLE_OPTIMISTIC_CACHING=1 meteor build --directory $tempdir
 cd $tempdir/bundle/programs
 ls -lsh web.browser
 set buildPrefix uber.danopia.net/meteor-bundles/last-done/$commit
