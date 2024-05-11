@@ -4,8 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import { useForm } from 'react-hook-form';
 import { AllGroups } from '../api/groups';
 
-export function TaskGridCreateRow(props: {
-}) {
+export function TaskGridCreateRow() {
   const {
     register,
     handleSubmit,
@@ -18,7 +17,7 @@ export function TaskGridCreateRow(props: {
     title: string;
   }) {
     try {
-      const id = await Meteor.callAsync('tasks/create', data.group, data.title, "");
+      await Meteor.callAsync('tasks/create', data.group, data.title, "");
       reset();
     } catch (err) {
       alert(`Creation failed: ${(err as Error).message}`);

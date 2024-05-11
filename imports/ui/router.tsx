@@ -64,11 +64,33 @@ export const router = createBrowserRouter([{
       ]),
       Component: () => (
         <div className="wrap">
-          <div style={{display: 'flex', flexDirection: 'row', gap: '1em'}}>
-            <Link to="/">Home</Link> |
-            <Link to="/chores/grouped">Grouped</Link> |
-            <Link to="/chores/create">Create</Link>
-          </div>
+          <h1>
+            All Chores
+            {" "}
+            <span style={{fontSize: '0.7em'}}>
+              [
+                <Link to="/">
+                  Home
+                </Link>
+              ]
+            </span>
+            {" "}
+            <span style={{fontSize: '0.7em'}}>
+              [
+                <Link to="/chores/grouped">
+                  See Grouped
+                </Link>
+              ]
+            </span>
+            {" "}
+            <span style={{fontSize: '0.7em'}}>
+              [
+                <Link to="/chores/create">
+                  Add
+                </Link>
+              ]
+            </span>
+          </h1>
           <ChoreGrid showCompleted={true} />
         </div>
       ),
@@ -80,7 +102,33 @@ export const router = createBrowserRouter([{
       ]),
       Component: () => (
         <div className="wrap">
-          <Link to="/chores">Latest</Link>
+          <h1>
+            All Chores
+            {" "}
+            <span style={{fontSize: '0.7em'}}>
+              [
+                <Link to="/">
+                  Home
+                </Link>
+              ]
+            </span>
+            {" "}
+            <span style={{fontSize: '0.7em'}}>
+              [
+                <Link to="/chores">
+                  See Latest
+                </Link>
+              ]
+            </span>
+            {" "}
+            <span style={{fontSize: '0.7em'}}>
+              [
+                <Link to="/chores/create">
+                  Add
+                </Link>
+              ]
+            </span>
+          </h1>
           <ChoreGridGrouped />
         </div>
       ),
@@ -115,10 +163,17 @@ export const router = createBrowserRouter([{
       ]),
       Component: () => (
         <div className="wrap">
-          <div style={{display: 'flex', flexDirection: 'row', gap: '1em'}}>
-            <Link to="/">Home</Link> |
-            <Link to="/tasks/create">Create</Link>
-          </div>
+          <h1>
+            All Tasks
+            {" "}
+            <span style={{fontSize: '0.7em'}}>
+              [
+                <Link to="/">
+                  Home
+                </Link>
+              ]
+            </span>
+          </h1>
           <TaskGrid />
         </div>
       ),
