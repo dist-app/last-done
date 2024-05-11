@@ -46,6 +46,7 @@ jobs:
         key: npm-${{ github.ref }}-${{ hashFiles('package-lock.json') }}
         restore-keys: |
           npm-${{ github.ref }}-
+          npm-
 
     - name: Install NPM dependencies
       run: meteor npm install
@@ -61,6 +62,7 @@ jobs:
         key: meteor/${{ steps.find-meteor.outputs.release }}-local-${{ github.ref }}-${{ github.sha }}
         restore-keys: |
           meteor/${{ steps.find-meteor.outputs.release }}-local-${{ github.ref }}-
+          meteor/${{ steps.find-meteor.outputs.release }}-local-
 
     - name: Create temp directory
       id: tempdir
