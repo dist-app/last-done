@@ -1,4 +1,4 @@
-// import "meteor/danopia:opentelemetry";
+import "meteor/danopia:opentelemetry";
 
 import React from 'react';
 import { createRoot } from 'react-dom/client';

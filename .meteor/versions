@@ -11,6 +11,7 @@ caching-html-compiler@2.0.0-rc300.2
 callback-hook@1.6.0-rc300.4
 check@1.4.2-rc300.4
 core-runtime@1.0.0-rc300.4
+danopia:opentelemetry@0.7.0-beta.1
 ddp@1.4.2-rc300.4
 ddp-client@3.0.0-rc300.4
 ddp-common@1.4.1-rc300.4
@@ -49,6 +50,7 @@ mongo@2.0.0-rc300.4
 mongo-decimal@0.1.4-beta300.7
 mongo-dev-server@1.1.1-rc300.4
 mongo-id@1.0.9-rc300.4
+montiapm:meteorx@2.3.1
 npm-mongo@4.16.2-rc300.4
 ordered-dict@1.2.0-rc300.4
 promise@1.0.0-rc300.4
