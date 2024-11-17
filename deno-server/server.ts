@@ -1,12 +1,12 @@
 import "https://deno.land/x/observability@v0.6.1/preconfigured/from-environment.ts";
 
-import appConfig from '../dist-app-meteor.json' with { type: "json" };
+import appConfig from '../dist-app-site.json' with { type: "json" };
 
 // Bring in the user-defined server logic
 import "../server/main";
 
 import { CollectionEntityApiMapping, DistInterface, SignedOutDistInterface, userNameMap } from './interface/registry';
-for (const [collName, mapping] of Object.entries(appConfig.collections)) {
+for (const [collName, mapping] of Object.entries(appConfig.meteorApp.collections)) {
   CollectionEntityApiMapping.set(collName, mapping);
 }
 
@@ -29,8 +29,8 @@ const server = await setupSingleSite(async (app, siteBaseUrl) => {
   app.auth.addAuthnMethod(new OidcAuthnMethod());
 
   const meteor = await setupMeteorApp({
-    buildBaseUrl: appConfig.meteorBundle.buildBaseUrl,
-    buildCommit: appConfig.meteorBundle.buildCommit,
+    buildBaseUrl: appConfig.meteorApp.bundle.buildBaseUrl,
+    buildCommit: appConfig.meteorApp.bundle.buildCommit,
     rootUrl: siteBaseUrl,
   });
 
@@ -166,7 +166,7 @@ const server = await setupSingleSite(async (app, siteBaseUrl) => {
     });
   });
 
-  meteor.mountPathnamePatterns(app, appConfig.spaPathPatterns);
+  meteor.mountPathnamePatterns(app, appConfig.meteorApp.spaPathPatterns);
 
   // app.mountPathHandler('/.well-known/skylink-configuration', [], req => {
   //   if (req.method !== 'GET') return new Response('405', {status: 405});
