@@ -20,7 +20,7 @@
     },
     "bundle": {
       "buildBaseUrl": "https://uber.danopia.net/meteor-bundles/last-done/",
-      "buildCommit": "f458a2a7353e6eaec1802215e35cc174dc2c6c3b"
+      "buildCommit": "9db47918660c3385b4f7f5d33abc43a7f4967c6d"
     },
     "spaPathPatterns": [
       "/",
