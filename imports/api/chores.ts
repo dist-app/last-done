@@ -36,6 +36,30 @@ Meteor.methods({
     return _id;
   },
 
+  async 'chores/by-id/edit-interval-days'(choreName: unknown, intervalDays: unknown) {
+    check(choreName, String);
+    check(intervalDays, Number);
+
+    const n = await ChoresCollection.updateAsync({
+      _id: choreName,
+    }, {
+      $set: { intervalDays },
+    });
+    return n > 0;
+  },
+
+  async 'chores/by-id/edit-description'(choreName: unknown, description: unknown) {
+    check(choreName, String);
+    check(description, String);
+
+    const n = await ChoresCollection.updateAsync({
+      _id: choreName,
+    }, {
+      $set: { description },
+    });
+    return n > 0;
+  },
+
   async 'chores/by-id/take-action'(choreName: unknown) {
     check(choreName, String);
 
