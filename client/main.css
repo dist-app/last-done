@@ -11,6 +11,12 @@ body {
   background-color: #ddd;
 }
 
+.is-archived {
+  color: #555;
+}
+.is-archived .next-due-cell {
+  font-style: italic;
+}
 .recently-done {
   color: #888;
 }

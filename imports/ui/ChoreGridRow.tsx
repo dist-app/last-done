@@ -14,6 +14,7 @@ export function ChoreGridRow(props: {
 
   return (
     <tr className={[
+      chore.archivedAt ? 'is-archived' : '',
       (chore.lastAction && chore.lastAction > props.lastActionCutoff) ? 'recently-done' : '',
       isDueSoon(chore) ? 'due-soon' : '',
     ].map(x => x).join(' ')}>
@@ -34,10 +35,10 @@ export function ChoreGridRow(props: {
         {lastDoneStr(chore)}
       </td> */}
       <td className="next-due-cell">
-        {nextDueStr(chore)}
+        {chore.archivedAt ? 'Archived' : nextDueStr(chore)}
       </td>
       <td>
-        <button disabled={chore.lastAction && chore.lastAction > props.lastActionCutoff} type="button" onClick={() => {
+        <button disabled={!!chore.archivedAt || (chore.lastAction && chore.lastAction > props.lastActionCutoff)} type="button" onClick={() => {
           Meteor.callAsync('chores/by-id/take-action', chore._id)
             .catch(err => {
               console.error(err);
