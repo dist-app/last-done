@@ -19,7 +19,7 @@ export const ChoreGrid = (props: {
   const choresByDue = chores
     .map(x => ({...x, nextDue: nextDueDate(x)}))
     .filter(x => props.showCompleted ? true : (
-      !x.nextDue || x.nextDue < nextActionCutoff
+      !x.archivedAt && (!x.nextDue || x.nextDue < nextActionCutoff)
     ))
     .sort((a,b) => {
       if (!a.nextDue) return 1;

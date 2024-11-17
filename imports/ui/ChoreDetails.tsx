@@ -38,7 +38,11 @@ export const ChoreDetails = (props: {
     <div className="chore-details">
       <h2>{chore.group}</h2>
       <h1>{chore.title}</h1>
-      <Link to="/chores">back</Link>
+      <div><Link to="/chores">back</Link></div>
+      <button style={{height: '2em', fontSize: '0.85em'}} onClick={() => {
+        if (!confirm(`Really archive chore?`)) return;
+        Meteor.callAsync('chores/by-id/archive', chore._id);
+      }} disabled={chore.archivedAt ? true : false}>move to archive</button>
       <hr />
       <table style={{width: '100%'}}>
         <tbody>

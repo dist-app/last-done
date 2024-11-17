@@ -12,6 +12,7 @@ export interface Chore {
   description?: string;
   intervalDays: number;
   createdAt: Date;
+  archivedAt?: Date | null;
   lastAction?: Date;
 }
 
@@ -56,6 +57,23 @@ Meteor.methods({
       _id: choreName,
     }, {
       $set: { description },
+    });
+    return n > 0;
+  },
+
+  async 'chores/by-id/archive'(choreName: unknown) {
+    check(choreName, String);
+
+    const chore = await ChoresCollection.findOneAsync({_id: choreName});
+    if (!chore) throw new Meteor.Error(404, 'chore not found');
+
+    const n = await ChoresCollection.updateAsync({
+      _id: choreName,
+      archivedAt: null,
+    }, {
+      $set: {
+        archivedAt: new Date,
+      },
     });
     return n > 0;
   },
@@ -112,9 +130,8 @@ export function timeAgoStr(time: Date) {
 }
 
 export function nextDueDate(chore: Chore) {
-  if (!chore.lastAction) {
-    return null;
-  }
+  if (!chore.lastAction) return null;
+  if (chore.archivedAt) return null;
 
   const nextDue = new Date(chore.lastAction);
   nextDue.setDate(nextDue.getDate() + chore.intervalDays);
@@ -136,6 +153,7 @@ export function nextDueStr(chore: Chore) {
 
 export function isDueSoon(chore: Chore) {
   if (!chore.lastAction) return false;
+  if (chore.archivedAt) return false;
 
   const nextDue = new Date(chore.lastAction);
   nextDue.setDate(nextDue.getDate() + chore.intervalDays);
