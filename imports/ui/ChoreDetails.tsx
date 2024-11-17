@@ -6,25 +6,25 @@ import { ChoresCollection, lastDoneStr, nextDueStr } from "/imports/api/chores";
 import { ChoreActionsCollection } from "../api/chore-actions";
 
 export const ChoreDetails = (props: {
-  choreId: string;
+  choreName: string;
 }) => {
-  const isLoading = useSubscribe("chores/by-id/details", props.choreId);
+  const isLoading = useSubscribe("chores/by-id/details", props.choreName);
 
   const chore = useTracker(() => ChoresCollection
     .findOne({
-      _id: props.choreId,
+      _id: props.choreName,
     })
-  , [props.choreId]);
+  , [props.choreName]);
 
   const actions = useFind(() => ChoreActionsCollection
     .find({
-      choreId: props.choreId,
+      choreName: props.choreName,
     }, {
       sort: {
         createdAt: -1,
       },
     })
-  , [props.choreId]);
+  , [props.choreName]);
 
   if (isLoading()) {
     return <div>Loading...</div>;

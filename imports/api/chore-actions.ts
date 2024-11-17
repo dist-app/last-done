@@ -3,7 +3,7 @@ import { Mongo } from 'meteor/mongo';
 export interface ChoreAction {
   _id: string;
   userId: string;
-  choreId: string;
+  choreName: string;
 
   createdAt: Date;
   // notes?: string;

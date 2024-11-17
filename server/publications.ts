@@ -8,13 +8,13 @@ Meteor.publish("chores/all", function () {
   return ChoresCollection.find();
 });
 
-Meteor.publish("chores/by-id/details", function (choreId: string) {
+Meteor.publish("chores/by-id/details", function (choreName: string) {
   return [
     ChoresCollection.find({
-      _id: choreId,
+      _id: choreName,
     }),
     ChoreActionsCollection.find({
-      choreId: choreId,
+      choreName: choreName,
     }, {
       sort: {
         createdAt: -1,

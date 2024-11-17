@@ -142,15 +142,15 @@ export const router = createBrowserRouter([{
       ),
     },
     {
-      path: '/chores/by-id/:choreId',
+      path: '/chores/by-id/:choreName',
       // loader: ({ params }) => Promise.all([
       //   cachedSubscription('access-requests/by-id', [params.requestId]),
       // ]),
       Component: () => {
-        const { choreId } = useParams();
+        const { choreName } = useParams();
         return (
           <div className="wrap">
-            <ChoreDetails choreId={choreId!} />
+            <ChoreDetails choreName={choreName!} />
           </div>
         );
       },

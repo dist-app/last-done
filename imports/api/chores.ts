@@ -36,10 +36,10 @@ Meteor.methods({
     return _id;
   },
 
-  async 'chores/by-id/take-action'(choreId: unknown) {
-    check(choreId, String);
+  async 'chores/by-id/take-action'(choreName: unknown) {
+    check(choreName, String);
 
-    const chore = await ChoresCollection.findOneAsync({_id: choreId});
+    const chore = await ChoresCollection.findOneAsync({_id: choreName});
     if (!chore) throw new Meteor.Error(404, 'chore not found');
 
     // Prevent rapid re-action
@@ -52,7 +52,7 @@ Meteor.methods({
     const nowDate = new Date;
 
     const n = await ChoresCollection.updateAsync({
-      _id: choreId,
+      _id: choreName,
       lastAction: chore.lastAction,
     }, {
       $set: {
@@ -62,7 +62,7 @@ Meteor.methods({
     if (!n) throw new Meteor.Error('race', `Database race occurred`);
 
     await ChoreActionsCollection.insertAsync({
-      choreId: choreId,
+      choreName: choreName,
       createdAt: nowDate,
       userId: chore.userId,
       goalIntervalDays: chore.intervalDays,
