@@ -1,0 +1,9 @@
+{
+  "imports": {
+    "dist-app-deno/": "../../dist-app-deno/",
+    "meteor/meteor": "./interface/meteor-meteor.ts",
+    "meteor/mongo": "./interface/meteor-mongo.ts",
+    "meteor/check": "./interface/meteor-check.ts",
+    "/imports/": "../imports/"
+  }
+}
