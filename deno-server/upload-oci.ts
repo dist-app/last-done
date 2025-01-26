@@ -106,11 +106,20 @@ async function deployEntrypoint(settings: {
     }]);
   }
 
-  assets.push(['dist-app-site.json', {
-    kind: 'file',
-    content: await Deno.readTextFile(`${appDir}/dist-app-site.json`),
-    encoding: "utf-8",
-  }]);
+  {
+    const siteJson = JSON.parse(await Deno.readTextFile(`${appDir}/dist-app-site.json`));
+
+    // TODO: don't mutate this file like this, make a new file if you need to
+    if (annotations['org.opencontainers.image.revision']) {
+      siteJson.meteorApp.bundle.buildCommit = annotations['org.opencontainers.image.revision'];
+    }
+
+    assets.push(['dist-app-site.json', {
+      kind: 'file',
+      content: JSON.stringify(siteJson),
+      encoding: "utf-8",
+    }]);
+  }
 
     // 'webapp/assets/auth-style.css',
     // 'server-sdk/modules/account-system/auth-style.css',
