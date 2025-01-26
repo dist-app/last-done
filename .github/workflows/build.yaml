@@ -124,12 +124,14 @@ jobs:
 
       - name: Determine image name
         id: name
+        # Adds a timestamp to githash tags, for flux compatibility
+        # https://fluxcd.io/flux/guides/sortable-image-tags/#formats-and-alternatives
         run: |
           IMAGE_ID=ghcr.io/danopia/last-done-backend
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           if [[ "${{ github.ref }}" == "refs/tags/"* ]]
-          then VERSION=$( echo $VERSION | sed -e 's/^v//' )
-          else VERSION=$( echo ${{ github.sha }} | cut -c1-7 )
+          then VERSION=v$( echo $VERSION | sed -e 's/^v//' )
+          else VERSION=sha-$( echo ${{ github.sha }} | cut -c1-7 )-t$(date +%s)
           fi
           echo "Will push to $IMAGE_ID:$VERSION"
           echo "::set-output name=image::$IMAGE_ID"
