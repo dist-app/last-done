@@ -102,6 +102,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     name: 'Upload backend artifact'
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
 
     steps:
       - name: Use Deno stable
