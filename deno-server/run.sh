@@ -1,5 +1,5 @@
 deno run \
-  --import-map=deno-server/import-map.json \
+  --import-map=import-map.json \
   --unstable-sloppy-imports \
   --unstable-kv \
   --unstable-broadcast-channel \

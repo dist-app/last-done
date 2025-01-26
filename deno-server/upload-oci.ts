@@ -8,8 +8,8 @@ import type { ModuleGraphJson } from "https://deno.land/x/deno_graph@0.69.6/type
 
 // import { getOciRegistry } from "../../../cloudydeno/denodir-oci/lib/store/registry.ts";
 // import { parseRepoAndRef } from "../../../cloudydeno/denodir-oci/deps.ts";
-import { getOciRegistry } from "https://raw.githubusercontent.com/cloudydeno/denodir-oci/705011149f9962dc632cfcccceef3628c1be002d/lib/store/registry.ts";
-import { parseRepoAndRef } from "https://raw.githubusercontent.com/cloudydeno/denodir-oci/705011149f9962dc632cfcccceef3628c1be002d/deps.ts";
+import { getOciRegistry } from "https://raw.githubusercontent.com/cloudydeno/denodir-oci/af1ac3bc46830103a604ef36052881f1ae4b7dc3/lib/store/registry.ts";
+import { parseRepoAndRef } from "https://raw.githubusercontent.com/cloudydeno/denodir-oci/af1ac3bc46830103a604ef36052881f1ae4b7dc3/deps.ts";
 
 const annotations: Record<string, string> = {
   'org.opencontainers.image.created': new Date().toISOString(),
@@ -31,7 +31,7 @@ const configJson = JSON.parse(await Deno.readTextFile('./dist-app-site.json'));
 if (!configJson?.denoDeploy) throw "No deno deploy description found";
 const deployment = await deployEntrypoint({
   entrypoint: "deno-server/server.ts",
-  importMap: "deno-server/import-map.json",
+  importMap: "import-map.json",
   appDir: ".",
   configJson,
 });
@@ -106,6 +106,12 @@ async function deployEntrypoint(settings: {
     }]);
   }
 
+  assets.push(['dist-app-site.json', {
+    kind: 'file',
+    content: await Deno.readTextFile(`${appDir}/dist-app-site.json`),
+    encoding: "utf-8",
+  }]);
+
     // 'webapp/assets/auth-style.css',
     // 'server-sdk/modules/account-system/auth-style.css',
 
@@ -127,7 +133,7 @@ async function deployEntrypoint(settings: {
 
   console.log('Loaded', assets.length, 'assets.');
 
-  const attachDatabase = assets.some(x => x[0].endsWith('server-sdk/modules/storage-deno-kv/mod.ts'));
+  // const attachDatabase = graphJson.modules.some(x => x.specifier.endsWith('server-sdk/modules/storage-deno-kv/mod.ts'));
 
   const assetsTarball = new Uint8Array(await new Response(ReadableStream.from(assets)
     .pipeThrough(new TransformStream<[string,Asset],TarStreamInput>({
@@ -157,7 +163,7 @@ async function deployEntrypoint(settings: {
     importMapUrl: settings.importMap,
     envVars: {
     },
-    attachDatabase,
+    attachDatabase: true,
     description: `${settings.configJson.denoDeploy?.description} (${Math.ceil(assetSize / 1024)}KiB in ${assets.length} files)`,
     // deno-lint-ignore no-unused-vars
     assets: Object.fromEntries(assets.map(([key, {content, ...rest}]) => [key, rest])),
@@ -181,6 +187,7 @@ async function deployEntrypoint(settings: {
 
   const manifestBytes = new TextEncoder().encode(JSON.stringify({
     "schemaVersion": 2,
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
     "config": {
       "mediaType": "application/vnd.danopia.dist-app-site.config.v1+json",
       "size": configBytes.byteLength,
