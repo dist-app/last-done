@@ -13,6 +13,7 @@ import { parseRepoAndRef } from "https://raw.githubusercontent.com/cloudydeno/de
 
 const annotations: Record<string, string> = {
   'org.opencontainers.image.created': new Date().toISOString(),
+  'org.opencontainers.image.description': `A dist-app-deno application artifact. This is not a container image.`,
 };
 {
   const gitSha = Deno.env.get('GITHUB_SHA');
