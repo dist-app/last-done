@@ -1,0 +1,48 @@
+{
+  "denoDeploy": {
+    "description": "contrib/last-done/mod.ts"
+  },
+
+  "meteorApp": {
+    "collections": {
+      "Chores": {
+        "apiVersion": "chore-list.dist.app/v1alpha1",
+        "kind": "Chore"
+      },
+      "ChoreActions": {
+        "apiVersion": "chore-list.dist.app/v1alpha1",
+        "kind": "ChoreAction"
+      },
+      "Tasks": {
+        "apiVersion": "chore-list.dist.app/v1alpha1",
+        "kind": "Task"
+      }
+    },
+    "bundle": {
+      "buildBaseUrl": "https://uber.danopia.net/meteor-bundles/last-done/",
+      "buildCommit": "074d22e40200e8df033ef6915505b47074906154"
+    },
+    "spaPathPatterns": [
+      "/",
+      "/tasks",
+      "/chores",
+      "/chores/*"
+    ]
+  },
+
+  "appName": "Last Done",
+  "appDesc": "Habit tracker focused on how many days it's been since you did things",
+  "appIcon": {
+    "type": "glyph",
+    "glyph": {
+      "text": "📝",
+      "backgroundColor": "#193856"
+    }
+  },
+
+  "authnMethods": {
+    "cookie": {
+      "sessionLengthDays": 14
+    }
+  }
+}

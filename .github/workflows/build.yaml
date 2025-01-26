@@ -97,3 +97,54 @@ jobs:
         aws s3 cp --content-type "application/json; charset=utf-8" \
           manifest.json s3://$buildPrefix/manifest.json
         echo https://$buildPrefix/manifest.json
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    name: 'Upload backend artifact'
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+      - name: Use Deno stable
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.1
+      - name: Cache https://
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/deno/remote/https
+            ~/.cache/deno/gen/https
+          key: deno-https/v2-${{ github.sha }}-doci
+          restore-keys: deno-https/v2-
+
+      - name: Determine image name
+        id: name
+        # Adds a timestamp to githash tags, for flux compatibility
+        # https://fluxcd.io/flux/guides/sortable-image-tags/#formats-and-alternatives
+        run: |
+          IMAGE_ID=ghcr.io/danopia/last-done-backend
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          if [[ "${{ github.ref }}" == "refs/tags/"* ]]
+          then VERSION=v$( echo $VERSION | sed -e 's/^v//' )
+          else VERSION=sha-$( echo ${{ github.sha }} | cut -c1-7 )-t$(date +%s)
+          fi
+          echo "Will push to $IMAGE_ID:$VERSION"
+          echo "::set-output name=image::$IMAGE_ID"
+          echo "::set-output name=tag::$VERSION"
+
+      - name: Log into GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: x-access-token
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/checkout@v4
+
+      - name: Upload
+        run: ./deno-server/upload-oci.ts ${{ steps.name.outputs.image }}:${{ steps.name.outputs.tag }}

@@ -1,7 +1,7 @@
 import { check } from 'meteor/check';
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import { ChoreActionsCollection } from './chore-actions';
+import { ChoreActionsCollection } from './chore-actions.ts';
 
 export interface Chore {
   _id: string;

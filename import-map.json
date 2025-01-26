@@ -1,0 +1,10 @@
+{
+  "imports": {
+    "dist-app-deno/": "https://uber.danopia.net/dist-app-deno/13205a2786c5e22a7a498201298d7d4a4b29fd9c/",
+    "meteor/meteor": "https://uber.danopia.net/dist-app-deno/13205a2786c5e22a7a498201298d7d4a4b29fd9c/hack/meteor-server/interface/meteor-meteor.ts",
+    "meteor/mongo": "https://uber.danopia.net/dist-app-deno/13205a2786c5e22a7a498201298d7d4a4b29fd9c/hack/meteor-server/interface/meteor-mongo.ts",
+    "meteor/check": "https://uber.danopia.net/dist-app-deno/13205a2786c5e22a7a498201298d7d4a4b29fd9c/hack/meteor-server/interface/meteor-check.ts",
+    "/imports/": "./imports/",
+    "dist-app-site.json": "./dist-app-site.json"
+  }
+}

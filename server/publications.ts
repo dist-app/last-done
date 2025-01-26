@@ -1,8 +1,8 @@
 import { Meteor } from "meteor/meteor";
 
-import { ChoreActionsCollection } from "/imports/api/chore-actions";
-import { ChoresCollection } from "/imports/api/chores";
-import { TasksCollection } from "/imports/api/tasks";
+import { ChoreActionsCollection } from "/imports/api/chore-actions.ts";
+import { ChoresCollection } from "/imports/api/chores.ts";
+import { TasksCollection } from "/imports/api/tasks.ts";
 
 Meteor.publish("chores/all", function () {
   return ChoresCollection.find();

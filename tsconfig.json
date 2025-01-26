@@ -21,6 +21,8 @@
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": false,
 
+    "allowImportingTsExtensions": true,
+
     /* Module Resolution Options */
     "baseUrl": ".",
     "paths": {
