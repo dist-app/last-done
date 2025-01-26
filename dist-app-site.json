@@ -1,6 +1,6 @@
 {
   "denoDeploy": {
-    "deployment-name": "famous-oyster-54"
+    "description": "contrib/last-done/mod.ts"
   },
 
   "meteorApp": {
@@ -20,7 +20,7 @@
     },
     "bundle": {
       "buildBaseUrl": "https://uber.danopia.net/meteor-bundles/last-done/",
-      "buildCommit": "9db47918660c3385b4f7f5d33abc43a7f4967c6d"
+      "buildCommit": "074d22e40200e8df033ef6915505b47074906154"
     },
     "spaPathPatterns": [
       "/",
