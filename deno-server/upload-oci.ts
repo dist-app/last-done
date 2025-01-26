@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno run --allow-env --allow-net --allow-run=deno,find,docker-credential-google-oidc --allow-read=.,${HOME} --allow-write=/tmp
+#!/usr/bin/env -S deno run --allow-env --allow-net --allow-run=deno,find,docker-credential-google-oidc --allow-read=.,${HOME} --allow-write=/tmp,/home/runner/work/_temp
 
 import { UntarStream } from "jsr:@std/tar@0.1.4/untar-stream";
 import { TarStream, TarStreamInput } from "jsr:@std/tar@0.1.4/tar-stream";
