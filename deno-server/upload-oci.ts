@@ -6,10 +6,9 @@ import { TarStream, TarStreamInput } from "jsr:@std/tar@0.1.4/tar-stream";
 import { encodeBase64 } from "https://deno.land/std@0.208.0/encoding/base64.ts";
 import type { ModuleGraphJson } from "https://deno.land/x/deno_graph@0.69.6/types.ts";
 
-// import { getOciRegistry } from "../../../cloudydeno/denodir-oci/lib/store/registry.ts";
-// import { parseRepoAndRef } from "../../../cloudydeno/denodir-oci/deps.ts";
-import { getOciRegistry } from "https://raw.githubusercontent.com/cloudydeno/denodir-oci/af1ac3bc46830103a604ef36052881f1ae4b7dc3/lib/store/registry.ts";
-import { parseRepoAndRef } from "https://raw.githubusercontent.com/cloudydeno/denodir-oci/af1ac3bc46830103a604ef36052881f1ae4b7dc3/deps.ts";
+import { OciStoreInmem } from "https://raw.githubusercontent.com/cloudydeno/denodir-oci/0d4af268aae92cd1f581a251e6f44027af62f018/lib/store/in-memory.ts";
+import { pushFullArtifact } from "https://raw.githubusercontent.com/cloudydeno/denodir-oci/0d4af268aae92cd1f581a251e6f44027af62f018/doci/transfers.ts";
+import { gzipStream } from "https://raw.githubusercontent.com/cloudydeno/denodir-oci/0d4af268aae92cd1f581a251e6f44027af62f018/lib/util/gzip.ts";
 
 const annotations: Record<string, string> = {
   'org.opencontainers.image.created': new Date().toISOString(),
@@ -35,7 +34,7 @@ const deployment = await deployEntrypoint({
   appDir: ".",
   configJson,
 });
-console.log(`Built`, deployment);
+console.log(`Pushed to`, deployment.destination.canonicalRef);
 
 interface Asset {
   "kind": "file";
@@ -144,16 +143,14 @@ async function deployEntrypoint(settings: {
 
   // const attachDatabase = graphJson.modules.some(x => x.specifier.endsWith('server-sdk/modules/storage-deno-kv/mod.ts'));
 
-  const assetsTarball = new Uint8Array(await new Response(ReadableStream.from(assets)
+  const assetsTarstream = ReadableStream.from(assets)
     .pipeThrough(new TransformStream<[string,Asset],TarStreamInput>({
       transform([path, asset], ctlr) {
         const bytes = new TextEncoder().encode(asset.content ?? '');
-        console.log(bytes.byteLength, path)
         if (bytes.byteLength == 0) return;
         ctlr.enqueue({
           path,
-          // readable: ReadableStream.from([bytes]),
-          readable: new Response(bytes).body!,
+          readable: ReadableStream.from([bytes]),
           size: bytes.byteLength,
           type: 'file',
           options: {
@@ -162,8 +159,9 @@ async function deployEntrypoint(settings: {
         });
       },
     }))
-      .pipeThrough(new TarStream())
-      .pipeThrough(new CompressionStream("gzip"))).arrayBuffer());
+    .pipeThrough(new TarStream());
+  const [assetsCompressed, _assetsCompression] = gzipStream(assetsTarstream);
+  const assetsTarball = new Uint8Array(await new Response(assetsCompressed).arrayBuffer());
 
   const assetsHash = await sha256bytesToHex(assetsTarball);
 
@@ -209,35 +207,22 @@ async function deployEntrypoint(settings: {
     }],
     "annotations": annotations,
   }));
-  // const manifestHash = await sha256bytesToHex(manifestBytes);
+  const manifestHash = await sha256bytesToHex(manifestBytes);
+  const manifestDigest = `sha256:${manifestHash}`;
+
+  const tempStore = new OciStoreInmem();
+  await tempStore.putLayerFromBytes('blob', {
+    mediaType: "application/vnd.cloudydeno.deno-deploy.assets.v1.tar+gzip",
+  }, assetsTarball);
+  await tempStore.putLayerFromBytes('blob', {
+    mediaType: "application/vnd.cloudydeno.deno-deploy.config.v1.tar+gzip",
+  }, configBytes);
+  await tempStore.putLayerFromBytes('manifest', {
+    mediaType: "application/vnd.oci.image.manifest.v1+json",
+  }, manifestBytes);
 
   if (!Deno.args[0]) throw "Provide desired image reference as first argument";
-  const repo = parseRepoAndRef(Deno.args[0]);
-  const registry = await getOciRegistry(repo, ['pull', 'push']);
-
-  if (!(await registry.hasBlob(`sha256:${assetsHash}`))) {
-    console.error('uploading assets');
-    await registry.putLayerFromBytes('blob', {
-      mediaType: "application/vnd.cloudydeno.deno-deploy.assets.v1.tar+gzip",
-    }, assetsTarball);
-  }
-
-  if (!(await registry.hasBlob(`sha256:${configHash}`))) {
-    console.error('uploading config');
-    await registry.putLayerFromBytes('blob', {
-      mediaType: "application/vnd.cloudydeno.deno-deploy.config.v1.tar+gzip",
-    }, configBytes);
-  }
-
-  console.error('uploading manifest');
-  // await registry.putLayerFromBytes('manifest', {mediaType: "application/vnd.cloudydeno.deno-deploy.manifest.v1+json",digest: `sha256:${configHash}`}, manifestBytes);
-  const final = await registry.api.putManifest({
-    mediaType: "application/vnd.oci.image.manifest.v1+json",
-    manifestData: manifestBytes,
-    ref: repo.tag ?? 'latest',
-  });
-
-  console.error('upload done');
+  const pushResult = await pushFullArtifact(tempStore, manifestDigest, Deno.args[0]);
 
   const githubOutput = Deno.env.get('GITHUB_OUTPUT');
   if (githubOutput) {
@@ -246,12 +231,12 @@ async function deployEntrypoint(settings: {
       append: true,
     });
     const writer = file.writable.getWriter();
-    await writer.write(new TextEncoder().encode(`digest=${final.digest}`));
+    await writer.write(new TextEncoder().encode(`digest=${manifestDigest}`));
     writer.close();
-    console.error(`Step output: digest=${final.digest}`);
+    console.error(`Step output: digest=${manifestDigest}`);
   }
 
-  return repo.canonicalName + '@' + final.digest;
+  return pushResult;
 }
 
 async function sha256bytesToHex(message: Uint8Array) {
