@@ -1,9 +1,9 @@
 {
   "imports": {
-    "dist-app-deno/": "https://uber.danopia.net/dist-app-deno/39bc4cee1fcd42074de5ac442785c9a6697f5d6b/",
-    "meteor/meteor": "https://uber.danopia.net/dist-app-deno/39bc4cee1fcd42074de5ac442785c9a6697f5d6b/hack/meteor-server/interface/meteor-meteor.ts",
-    "meteor/mongo": "https://uber.danopia.net/dist-app-deno/39bc4cee1fcd42074de5ac442785c9a6697f5d6b/hack/meteor-server/interface/meteor-mongo.ts",
-    "meteor/check": "https://uber.danopia.net/dist-app-deno/39bc4cee1fcd42074de5ac442785c9a6697f5d6b/hack/meteor-server/interface/meteor-check.ts",
+    "dist-app-deno/": "https://uber.danopia.net/dist-app-deno/57d4d26a1a7007987620eaaccfe4f3b99aa7d3fe/",
+    "meteor/meteor": "https://uber.danopia.net/dist-app-deno/57d4d26a1a7007987620eaaccfe4f3b99aa7d3fe/hack/meteor-server/interface/meteor-meteor.ts",
+    "meteor/mongo": "https://uber.danopia.net/dist-app-deno/57d4d26a1a7007987620eaaccfe4f3b99aa7d3fe/hack/meteor-server/interface/meteor-mongo.ts",
+    "meteor/check": "https://uber.danopia.net/dist-app-deno/57d4d26a1a7007987620eaaccfe4f3b99aa7d3fe/hack/meteor-server/interface/meteor-check.ts",
     "/imports/": "./imports/",
     "dist-app-site.json": "./dist-app-site.json"
   }

@@ -1,6 +1,10 @@
 {
   "denoDeploy": {
-    "description": "contrib/last-done/mod.ts"
+    "description": "contrib/last-done/mod.ts",
+    "entryPointUrl": "deno-server/server.ts",
+    "importMapUrl": "import-map.json",
+    "databases": {"default": ""},
+    "requestTimeout": 5000
   },
 
   "meteorApp": {
