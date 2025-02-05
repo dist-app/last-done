@@ -101,7 +101,7 @@ jobs:
   publish:
     needs: build
     runs-on: ubuntu-latest
-    name: 'Upload backend artifact'
+    name: 'Publish bundle'
     permissions:
       contents: read
       packages: write
@@ -119,23 +119,10 @@ jobs:
           path: |
             ~/.cache/deno/remote/https
             ~/.cache/deno/gen/https
-          key: deno-https/v2-${{ github.sha }}-doci
+          key: deno-https/v2-${{ github.sha }}
           restore-keys: deno-https/v2-
-
-      - name: Determine image name
-        id: name
-        # Adds a timestamp to githash tags, for flux compatibility
-        # https://fluxcd.io/flux/guides/sortable-image-tags/#formats-and-alternatives
-        run: |
-          IMAGE_ID=ghcr.io/danopia/last-done-backend
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          if [[ "${{ github.ref }}" == "refs/tags/"* ]]
-          then VERSION=v$( echo $VERSION | sed -e 's/^v//' )
-          else VERSION=sha-$( echo ${{ github.sha }} | cut -c1-7 )-t$(date +%s)
-          fi
-          echo "Will push to $IMAGE_ID:$VERSION"
-          echo "::set-output name=image::$IMAGE_ID"
-          echo "::set-output name=tag::$VERSION"
+      - name: Install dist-bundle utility
+        run: deno install --global --allow-all --no-config https://uber.danopia.net/dist-app-deno/7a25acdf320dead653c6bc015cc9d5bb315ab0ee/cli/dist-bundle/main.ts
 
       - name: Log into GitHub Container Registry
         uses: docker/login-action@v3
@@ -146,5 +133,25 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: Upload
-        run: ./deno-server/upload-oci.ts ${{ steps.name.outputs.image }}:${{ steps.name.outputs.tag }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ghcr.io/danopia/last-done
+          tags: |
+            type=sha
+            type=ref,event=pr
+            type=ref,event=tag
+            type=edge,branch=main
+
+      - name: Build artifact
+        id: build
+        run: dist-bundle build
+        env:
+          artifact-labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Push artifact
+        run: dist-bundle push
+        env:
+          digest: ${{ steps.build.outputs.digest }}
+          destinations: ${{ steps.meta.outputs.tags }}

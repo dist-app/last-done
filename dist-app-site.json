@@ -1,6 +1,8 @@
 {
   "denoDeploy": {
-    "description": "contrib/last-done/mod.ts"
+    "description": "contrib/last-done/mod.ts",
+    "databases": {"default": ""},
+    "requestTimeout": 5000
   },
 
   "meteorApp": {
