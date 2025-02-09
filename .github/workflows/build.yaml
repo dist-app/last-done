@@ -8,14 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: write
       id-token: write
     steps:
-
-    - uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: arn:aws:iam::414064234042:role/gha-deployer
-        role-session-name: gha-run-${{ github.run_id }}
-        aws-region: eu-west-1
 
     - uses: actions/checkout@v4
 
@@ -64,94 +59,48 @@ jobs:
           meteor/${{ steps.find-meteor.outputs.release }}-local-${{ github.ref }}-
           meteor/${{ steps.find-meteor.outputs.release }}-local-
 
-    - name: Create temp directory
-      id: tempdir
-      run: echo "path=$(mktemp -d)" | tee -a "$GITHUB_OUTPUT"
+    - name: Use Deno stable
+      uses: denoland/setup-deno@v2
+      with:
+        deno-version: v2.1
+    - name: Cache https://
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/deno/remote/https
+          ~/.cache/deno/gen/https
+        key: deno-https/v2-${{ github.sha }}
+        restore-keys: deno-https/v2-
+    - name: Install dist-bundle utility
+      run: deno install --global --allow-all --no-config https://uber.danopia.net/dist-app-deno/24d8a47dcd1e950f24086479c9168fc876f8510c/cli/dist-bundle/main.ts
 
-    - name: Build app bundles
+    - name: Log into GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: x-access-token
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      with:
+        images: ghcr.io/danopia/last-done
+        tags: |
+          type=sha
+          type=ref,event=pr
+          type=ref,event=tag
+          type=edge,branch=main
+
+    - name: Build artifact
+      id: build
+      run: dist-bundle build
       env:
+        artifact-labels: ${{ steps.meta.outputs.labels }}
         METEOR_DISABLE_OPTIMISTIC_CACHING: 1
-      run: meteor build --directory ${{ steps.tempdir.outputs.path }} --platforms web.browser
 
-    - name: Create manifest
-      working-directory: ${{ steps.tempdir.outputs.path }}/bundle/programs
-      run: >
-        echo '{"web.browser":{"hashes":{"js":"'$(basename web.browser/*.js .js)'","css":"'$(basename web.browser/*.css .css)'"},"html":'$(jq -cn --rawfile body web.browser/body.html --rawfile head web.browser/head.html '$ARGS.named')'},"server":'$(jq -c . < server/config.json)'}' | tee manifest.json | jq .
-
-    - name: Upload web.browser bundle to S3
-      working-directory: ${{ steps.tempdir.outputs.path }}/bundle/programs/web.browser
-      run: |
-        ls -lsh
-        buildPrefix=uber.danopia.net/meteor-bundles/last-done/${{ github.sha }}/web.browser
-        aws s3 cp --content-type "application/javascript; charset=utf-8" \
-          *.js s3://$buildPrefix/app.js
-        aws s3 cp --content-type "text/css; charset=utf-8" \
-          *.css s3://$buildPrefix/app.css
-        echo https://$buildPrefix/app.js
-        echo https://$buildPrefix/app.css
-
-    - name: Upload manifest to S3
-      working-directory: ${{ steps.tempdir.outputs.path }}/bundle/programs
-      run: |
-        buildPrefix=uber.danopia.net/meteor-bundles/last-done/${{ github.sha }}
-        aws s3 cp --content-type "application/json; charset=utf-8" \
-          manifest.json s3://$buildPrefix/manifest.json
-        echo https://$buildPrefix/manifest.json
-
-  publish:
-    needs: build
-    runs-on: ubuntu-latest
-    name: 'Publish bundle'
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
-
-    steps:
-      - name: Use Deno stable
-        uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.1
-      - name: Cache https://
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/deno/remote/https
-            ~/.cache/deno/gen/https
-          key: deno-https/v2-${{ github.sha }}
-          restore-keys: deno-https/v2-
-      - name: Install dist-bundle utility
-        run: deno install --global --allow-all --no-config https://uber.danopia.net/dist-app-deno/7a25acdf320dead653c6bc015cc9d5bb315ab0ee/cli/dist-bundle/main.ts
-
-      - name: Log into GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: x-access-token
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: actions/checkout@v4
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: ghcr.io/danopia/last-done
-          tags: |
-            type=sha
-            type=ref,event=pr
-            type=ref,event=tag
-            type=edge,branch=main
-
-      - name: Build artifact
-        id: build
-        run: dist-bundle build
-        env:
-          artifact-labels: ${{ steps.meta.outputs.labels }}
-
-      - name: Push artifact
-        run: dist-bundle push
-        env:
-          digest: ${{ steps.build.outputs.digest }}
-          destinations: ${{ steps.meta.outputs.tags }}
+    - name: Push artifact
+      run: dist-bundle push
+      env:
+        digest: ${{ steps.build.outputs.digest }}
+        destinations: ${{ steps.meta.outputs.tags }}
