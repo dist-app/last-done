@@ -13,6 +13,12 @@ updates:
       dev-deps:
         dependency-type: development
 
+    ignore:
+    - dependency-name: react-router-dom
+      # https://github.com/remix-run/react-router/issues/12381
+      versions:
+      - '>= 7'
+
   - package-ecosystem: github-actions
     directory: '/'
     schedule:
