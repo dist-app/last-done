@@ -85,9 +85,9 @@ jobs:
       id: meta
       uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804
       with:
-        images: ghcr.io/danopia/last-done
+        images: ghcr.io/dist-app/last-done
         tags: |
-          type=sha
+          type=sha,suffix=-h${{github.run_number}}
           type=ref,event=pr
           type=ref,event=tag
           type=edge,branch=main
