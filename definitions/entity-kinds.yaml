@@ -1,0 +1,123 @@
+---
+apiVersion: schema.dist.app/v1alpha1
+kind: EntityKind
+metadata:
+  name: chores.chore-list.dist.app
+  labels:
+    ddp.dist.app/collection-name: Chores
+spec:
+  group: chore-list.dist.app
+  names:
+    kind: Chore
+    plural: chores
+    singular: chore
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        required:
+        - spec
+        properties:
+          spec:
+            type: object
+            required:
+            - group
+            - title
+            - intervalDays
+            - createdAt
+            properties:
+              group:
+                type: string
+              title:
+                type: string
+              description:
+                type: string
+              intervalDays:
+                type: number
+              createdAt:
+                type: dateTime
+              lastAction:
+                type: dateTime
+
+---
+apiVersion: schema.dist.app/v1alpha1
+kind: EntityKind
+metadata:
+  name: choreactions.chore-list.dist.app
+  labels:
+    ddp.dist.app/collection-name: ChoreActions
+spec:
+  group: chore-list.dist.app
+  names:
+    kind: ChoreAction
+    plural: choreactions
+    singular: choreaction
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        required:
+        - spec
+        properties:
+          spec:
+            type: object
+            required:
+            - choreName
+            - createdAt
+            properties:
+              choreName:
+                type: string
+              createdAt:
+                type: dateTime
+              prevActionDays:
+                type: number
+              goalIntervalDays:
+                type: number
+
+
+---
+apiVersion: schema.dist.app/v1alpha1
+kind: EntityKind
+metadata:
+  name: tasks.chore-list.dist.app
+  labels:
+    ddp.dist.app/collection-name: Tasks
+spec:
+  group: chore-list.dist.app
+  names:
+    kind: Task
+    plural: tasks
+    singular: task
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        required:
+        - spec
+        properties:
+          spec:
+            type: object
+            required:
+            - group
+            - title
+            - createdAt
+            properties:
+              group:
+                type: string
+              title:
+                type: string
+              description:
+                type: string
+              createdAt:
+                type: dateTime
+              doneAt:
+                type: dateTime

@@ -1,0 +1,46 @@
+---
+apiVersion: bundle.dist.app/v1alpha1
+kind: AppManifest
+metadata:
+  name: last-done
+spec:
+  title: Last Done
+  description: Habit tracker focused on how many days it's been since you did things
+  primaryIcon:
+    apiVersion: TODO.dist.app/v1alpha1
+    kind: Glyph
+    spec:
+      text: 📝
+      backgroundColor: '#193856'
+
+---
+apiVersion: bundle.dist.app/v1alpha1
+kind: DenoDeploy
+metadata:
+  name: main
+spec:
+  attachDatabase: true
+  requestTimeout: 5000
+
+---
+apiVersion: bundle.dist.app/v1alpha1
+kind: MeteorServerless
+metadata:
+  name: main
+spec:
+  spaPathPatterns:
+  - /
+  - /tasks
+  - /chores
+  - /chores/*
+  authnMethods:
+    cookie:
+      sessionLengthDays: 14
+
+# ---
+# apiVersion: bundle.dist.app/v1alpha1
+# kind: CookieAuthn
+# metadata:
+#   name: main
+# spec:
+#   sessionLengthDays: 14
