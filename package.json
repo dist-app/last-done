@@ -24,6 +24,8 @@
     "typescript": "^5"
   },
   "meteor": {
+    "modernWebArchsOnly": true,
+    "modernTranspiler": true,
     "mainModule": {
       "client": "client/main.tsx",
       "server": "server/main.ts"
