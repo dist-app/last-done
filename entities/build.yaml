@@ -1,0 +1,49 @@
+---
+apiVersion: bundle.dist.app/v1alpha1
+kind: BundleConfig
+metadata:
+  name: default
+spec:
+  denoDeploy:
+    databases:
+      default: ''
+    requestTimeout: 5000
+
+  meteorApp:
+    spaPathPatterns:
+    - /
+    - /tasks
+    - /chores
+    - /chores/*
+
+  appName: Last Done
+  appDesc: Habit tracker focused on how many days it's been since you did things
+  appIcon:
+    type: glyph
+    glyph:
+      text: '📝'
+      backgroundColor: '#193856'
+
+  authnMethods:
+    cookie:
+      sessionLengthDays: 14
+
+# ---
+# apiVersion: bundle.dist.app/v1alpha1
+# kind: MeteorApp
+# metadata:
+#   name: main
+# spec:
+#   spaPathPatterns:
+#   - /
+#   - /tasks
+#   - /chores
+#   - /chores/*
+
+# ---
+# apiVersion: bundle.dist.app/v1alpha1
+# kind: CookieAuthn
+# metadata:
+#   name: main
+# spec:
+#   sessionLengthDays: 14

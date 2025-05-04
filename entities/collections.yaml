@@ -1,0 +1,98 @@
+---
+apiVersion: bundle.dist.app/v1alpha1
+kind: DocumentCollection
+metadata:
+  name: Chores
+spec:
+  apiVersion: chore-list.dist.app/v1alpha1
+  items:
+    kind: Chore
+    plural: chores
+    singular: chore
+    openAPIV3Schema:
+      type: object
+      required: [spec]
+      properties:
+        spec:
+          type: object
+          required:
+          - group
+          - title
+          - intervalDays
+          - createdAt
+          properties:
+            group:
+              type: string
+            title:
+              type: string
+            description:
+              type: string
+            intervalDays:
+              type: number
+            createdAt:
+              type: dateTime
+            lastAction:
+              type: dateTime
+
+---
+apiVersion: bundle.dist.app/v1alpha1
+kind: DocumentCollection
+metadata:
+  name: ChoreActions
+spec:
+  apiVersion: chore-list.dist.app/v1alpha1
+  items:
+    kind: ChoreAction
+    plural: choreactions
+    singular: choreaction
+    openAPIV3Schema:
+      type: object
+      required: [spec]
+      properties:
+        spec:
+          type: object
+          required:
+          - choreName
+          - createdAt
+          properties:
+            choreName:
+              type: string
+            createdAt:
+              type: dateTime
+            prevActionDays:
+              type: number
+            goalIntervalDays:
+              type: number
+
+---
+apiVersion: bundle.dist.app/v1alpha1
+kind: DocumentCollection
+metadata:
+  name: Tasks
+spec:
+  apiVersion: chore-list.dist.app/v1alpha1
+  items:
+    kind: Task
+    plural: tasks
+    singular: task
+    openAPIV3Schema:
+      type: object
+      required: [spec]
+      properties:
+        spec:
+          type: object
+          required:
+          - group
+          - title
+          - createdAt
+          properties:
+            group:
+              type: string
+            title:
+              type: string
+            description:
+              type: string
+            createdAt:
+              type: dateTime
+            doneAt:
+              type: dateTime
