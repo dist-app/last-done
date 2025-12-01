@@ -12,7 +12,7 @@ jobs:
       id-token: write
     steps:
 
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     # some prior work on caching:
     # https://github.com/meteor-actions/cache-build/blob/main/action.yml
