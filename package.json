@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^10",
-    "@types/node": "^24",
+    "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-router-dom": "^5",
