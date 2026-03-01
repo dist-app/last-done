@@ -30,7 +30,7 @@ jobs:
         key: meteor/${{ steps.find-meteor.outputs.release }}-installation
     - name: Setup Meteor ${{ steps.find-meteor.outputs.release }}
       if: ${{ steps.cache-meteor.outputs.cache-hit != 'true' }}
-      uses: meteorengineer/setup-meteor@v2
+      uses: meteorengineer/setup-meteor@v3
       with:
         meteor-release: ${{ steps.find-meteor.outputs.release }}
 
